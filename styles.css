@@ -1,0 +1,134 @@
+:root {
+  --dag-green: #0f3a1f;
+  --dag-earth: #d2b48c;
+  --dag-gold: #d4a017;
+  --dag-red: #9c2a2a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.btn-main {
+  background: linear-gradient(135deg, var(--dag-gold), #f3c13b);
+  color: var(--dag-green);
+  box-shadow: 0 10px 25px rgba(212, 160, 23, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.btn-main:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.98);
+  box-shadow: 0 12px 26px rgba(212, 160, 23, 0.38);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 20, 13, 0.62);
+}
+
+.modal-panel {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 34rem);
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 58, 31, 0.18);
+  background: #f8f2e8;
+  padding: 1.25rem;
+  box-shadow: 0 24px 60px rgba(15, 58, 31, 0.25);
+}
+
+.reveal-scale {
+  animation: modalIn 0.25s ease-out;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.room-card,
+.route-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.room-card:hover,
+.route-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 30px rgba(15, 58, 31, 0.12);
+}
+
+.calendar-day {
+  min-height: 72px;
+  border: 1px solid rgba(210, 180, 140, 0.55);
+  border-radius: 0.75rem;
+  padding: 0.45rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.calendar-day:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--dag-gold);
+}
+
+.calendar-day.busy {
+  background: rgba(156, 42, 42, 0.35);
+  border-color: rgba(156, 42, 42, 0.8);
+  color: #ffe6e6;
+}
+
+.calendar-day.selected {
+  background: rgba(212, 160, 23, 0.35);
+  border-color: var(--dag-gold);
+  color: #fff;
+}
+
+.calendar-day.in-range {
+  background: rgba(210, 180, 140, 0.25);
+  border-color: rgba(212, 160, 23, 0.5);
+}
+
+.calendar-empty {
+  min-height: 72px;
+}
+
+@media (max-width: 420px) {
+  .calendar-day,
+  .calendar-empty {
+    min-height: 62px;
+  }
+}
