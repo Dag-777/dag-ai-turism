@@ -1,13 +1,5 @@
 /*
-  X-Frame-Options: SAMEORIGIN
+  X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
-  Referrer-Policy: no-referrer-when-downgrade
-
-/index.html
-  Cache-Control: no-cache, no-store, must-revalidate
-
-/script.js
-  Cache-Control: no-cache, no-store, must-revalidate
-
-/styles.css
-  Cache-Control: no-cache, no-store, must-revalidate
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://openfpcdn.io https://fonts.googleapis.com; connect-src 'self' https://ipwho.is https://ipapi.co https://openfpcdn.io https://fonts.googleapis.com; img-src 'self' data: https://images.unsplash.com https://images.pexels.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; frame-ancestors 'none'

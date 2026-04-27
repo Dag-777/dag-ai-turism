@@ -1,260 +1,142 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>DagAI Tourism — Демо горной виллы Дагестан | AI-бронирование</title>
-    <meta
-      name="description"
-      content="DagAI_tourism.com — демо-сайт горной виллы в Дагестане: AI-бронирование, интерактивный календарь, маршруты и онлайн-оплата в demo-режиме."
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              dag: {
-                green: '#0F3A1F',
-                earth: '#D2B48C',
-                gold: '#D4A017',
-                red: '#9C2A2A'
-              }
-            },
-            fontFamily: {
-              display: ['"Playfair Display"', 'serif'],
-              body: ['"Source Sans 3"', 'sans-serif']
-            }
-          }
-        }
-      };
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body class="bg-[#f8f2e8] font-body text-[#1d241f]">
-    <header class="fixed left-0 right-0 top-0 z-40 border-b border-white/20 bg-dag-green/90 backdrop-blur-sm">
-      <div class="mx-auto max-w-6xl px-4 py-3 sm:px-6">
-        <div class="flex items-center justify-between">
-          <a href="#hero" class="font-display text-lg font-bold text-white" aria-label="Перейти в начало">DagAI Tourism</a>
-          <span class="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">Web + Mobile</span>
-        </div>
-        <nav
-          class="mt-3 flex gap-2 overflow-x-auto whitespace-nowrap pb-1 text-xs font-semibold text-white/90 sm:gap-4 sm:text-sm"
-          aria-label="Главная навигация"
-        >
-          <a href="#rooms" class="rounded-full border border-white/25 px-3 py-1.5 transition hover:text-dag-gold">Номера</a>
-          <a href="#booking" class="rounded-full border border-white/25 px-3 py-1.5 transition hover:text-dag-gold">Бронирование</a>
-          <a href="#routes" class="rounded-full border border-white/25 px-3 py-1.5 transition hover:text-dag-gold">Маршруты</a>
-          <a href="#ai" class="rounded-full border border-white/25 px-3 py-1.5 transition hover:text-dag-gold">AI-помощник</a>
-        </nav>
-      </div>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>DagAI Tourism — Горная Вилла Гуниб · AI-консьерж 24/7</title>
+  <meta name="description" content="Люксовая горная вилла в Дагестане (Гуниб). Бронирование номеров, авторские маршруты по Сулакскому каньону и Дербенту, AI-консьерж 24/7.">
+  <meta name="theme-color" content="#0f3a1f">
+  <meta property="og:title" content="DagAI Tourism · Горная Вилла Гуниб">
+  <meta property="og:description" content="Люксовая горная вилла в Дагестане. AI-консьерж 24/7.">
+  <meta property="og:type" content="website">
 
-    <main>
-      <section id="hero" class="relative flex min-h-screen items-center pt-28 sm:pt-32">
-        <img
-          id="heroImage"
-          src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1800&q=80"
-          alt="Горная вилла в Дагестане"
-          class="absolute inset-0 h-full w-full object-cover"
-        />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-dag-green/55 to-dag-green/85"></div>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
 
-        <div class="relative z-10 mx-auto w-full max-w-6xl px-4 py-10 sm:px-6">
-          <div class="max-w-3xl reveal">
-            <p class="mb-3 inline-flex rounded-full border border-dag-gold/60 bg-black/25 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-dag-gold">
-              DagAI_tourism.com
-            </p>
-            <h1 class="font-display text-4xl font-bold text-white sm:text-5xl lg:text-6xl">DagAI Tourism</h1>
-            <p class="mt-4 text-base text-white/90 sm:text-xl">
-              Горная Вилла Гуниб • AI-гид по Дагестану 24/7
-            </p>
+  <link rel="stylesheet" href="css/style.css?v=20260426b">
+  <link rel="stylesheet" href="css/palantir.css?v=20260426b">
+</head>
+<body>
 
-            <div class="mt-7 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#booking"
-                class="btn-main rounded-xl px-6 py-3 text-center text-sm font-bold sm:text-base"
-                aria-label="Забронировать сейчас"
-              >
-                Забронировать сейчас
-              </a>
-              <a
-                href="#routes"
-                class="rounded-xl border border-white/50 bg-white/10 px-6 py-3 text-center text-sm font-bold text-white transition hover:bg-white/20 sm:text-base"
-                aria-label="Посмотреть маршруты"
-              >
-                Посмотреть маршруты
-              </a>
-            </div>
-          </div>
+<!-- NAV -->
+<nav class="nav" aria-label="Главная навигация">
+  <div class="container nav__inner">
+    <a href="#hero" class="nav__brand">DagAI<span class="nav__brand-mark">·</span>Tourism</a>
+    <ul class="nav__menu">
+      <li><a href="#rooms">Номера</a></li>
+      <li><a href="#routes">Маршруты</a></li>
+      <li><a href="#booking">Бронирование</a></li>
+      <li><a href="#ai">AI-помощник</a></li>
+    </ul>
+    <button class="nav__burger" type="button" aria-label="Открыть меню">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
 
-          <a
-            href="https://DagAI_tourism.com"
-            class="mt-10 inline-block text-sm font-semibold text-white/85 underline decoration-dag-gold underline-offset-4"
-            aria-label="Демо-сайт DagAI_tourism.com"
-          >
-            Демо-сайт: DagAI_tourism.com
-          </a>
-        </div>
-      </section>
+<!-- HERO -->
+<header id="hero" class="hero">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="container hero__inner">
+    <span class="hero__eyebrow">Гуниб · Дагестан · 1500 м над уровнем моря</span>
+    <h1 class="hero__title">DagAI Tourism</h1>
+    <p class="hero__sub">Горная Вилла Гуниб · AI-консьерж 24/7. Древние сёла, бирюзовые каньоны и панорамы, от которых перехватывает дыхание.</p>
+    <div class="hero__cta">
+      <a href="#booking" class="btn btn--gold">Забронировать сейчас</a>
+      <a href="#routes" class="btn btn--outline-stone">Посмотреть маршруты</a>
+    </div>
+  </div>
+  <div class="hero__scroll" aria-hidden="true"></div>
+</header>
 
-      <section id="rooms" class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <div class="mb-8 reveal">
-          <p class="text-sm font-semibold uppercase tracking-[0.16em] text-dag-red">Номера и цены</p>
-          <h2 class="font-display text-3xl text-dag-green sm:text-4xl">Выберите формат проживания</h2>
-        </div>
-        <div id="roomCards" class="grid gap-5 sm:grid-cols-2 xl:grid-cols-4"></div>
-      </section>
+<!-- ROOMS -->
+<section id="rooms" class="section section--green">
+  <div class="container">
+    <div class="section__head" data-reveal>
+      <span class="section__eyebrow">Номера</span>
+      <h2>Где остановиться</h2>
+    </div>
+    <div id="rooms-grid" class="rooms-grid" data-reveal></div>
+  </div>
+</section>
 
-      <section id="booking" class="bg-dag-green/95 py-14 text-white">
-        <div class="mx-auto max-w-6xl px-4 sm:px-6">
-          <div class="mb-8 reveal">
-            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-dag-gold">Интерактивный календарь</p>
-            <h2 class="font-display text-3xl sm:text-4xl">Бронирование на 3 месяца вперёд</h2>
-            <p class="mt-2 max-w-2xl text-white/80">Выберите даты check-in и check-out. Занятые даты отмечены красным.</p>
-          </div>
+<!-- ROUTES -->
+<section id="routes" class="section section--stone">
+  <div class="container">
+    <div class="section__head" data-reveal>
+      <span class="section__eyebrow">Маршруты</span>
+      <h2 style="color: var(--green);">Открыть Дагестан</h2>
+    </div>
+    <div id="routes-grid" class="routes-grid" data-reveal></div>
+  </div>
+</section>
 
-          <div class="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-            <article class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md sm:p-5 reveal">
-              <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
-                <p class="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold" id="calendarLegend">Выбор дат</p>
-                <p class="text-xs font-semibold text-white/80" id="calendarHint">Нажмите сначала дату заезда, затем дату выезда</p>
-              </div>
-              <div id="calendarContainer" class="space-y-6"></div>
-            </article>
-
-            <article class="rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md sm:p-5 reveal">
-              <h3 class="text-xl font-bold">Ваше бронирование</h3>
-              <div class="mt-4 space-y-2 text-sm">
-                <p><span class="font-semibold text-dag-gold">Номер:</span> <span id="summaryRoom">Не выбран</span></p>
-                <p><span class="font-semibold text-dag-gold">Check-in:</span> <span id="summaryCheckin">—</span></p>
-                <p><span class="font-semibold text-dag-gold">Check-out:</span> <span id="summaryCheckout">—</span></p>
-                <p><span class="font-semibold text-dag-gold">Ночей:</span> <span id="summaryNights">0</span></p>
-                <p class="text-base font-extrabold"><span class="text-dag-gold">Итого:</span> <span id="summaryTotal">0 ₽</span></p>
-              </div>
-
-              <button
-                id="bookNowBtn"
-                class="mt-5 w-full rounded-xl bg-dag-gold px-4 py-3 text-sm font-extrabold text-dag-green transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Забронировать"
-                disabled
-              >
-                Забронировать
-              </button>
-
-              <div class="mt-6 rounded-xl border border-dag-gold/40 bg-black/20 p-3">
-                <p class="text-xs uppercase tracking-[0.14em] text-dag-gold">Демо-оплата</p>
-                <button
-                  id="payBtn"
-                  class="mt-3 w-full rounded-xl bg-dag-red px-4 py-3 text-sm font-extrabold text-white transition hover:bg-[#b23333] disabled:cursor-not-allowed disabled:opacity-60"
-                  aria-label="Оплатить предоплату"
-                  disabled
-                >
-                  Оплатить предоплату
-                </button>
-                <p id="paymentInlineStatus" class="mt-2 text-xs text-white/80">Оплата будет доступна после выбора дат и номера.</p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="routes" class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <div class="mb-8 reveal">
-          <p class="text-sm font-semibold uppercase tracking-[0.16em] text-dag-red">Маршруты по Дагестану</p>
-          <h2 class="font-display text-3xl text-dag-green sm:text-4xl">Лучшие направления для гостей виллы</h2>
-        </div>
-        <div id="routeCards" class="grid gap-6 md:grid-cols-3"></div>
-      </section>
-
-      <section id="ai" class="mx-auto max-w-6xl px-4 pb-14 sm:px-6">
-        <div class="reveal rounded-2xl bg-dag-green p-6 text-white sm:p-8">
-          <h2 class="font-display text-2xl sm:text-3xl">AI-помощник DagAI Tourism</h2>
-          <p class="mt-3 max-w-3xl text-sm text-white/85 sm:text-base">
-            Telegram-бот помогает с подбором маршрутов, проверкой доступности дат и ответами по трансферу 24/7.
-          </p>
-          <a
-            id="telegramBtn"
-            href="https://t.me/DagAi_tourism_bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-main mt-5 inline-flex rounded-xl px-5 py-3 text-sm font-bold"
-            aria-label="Написать боту в Telegram"
-          >
-            Написать боту в Telegram
-          </a>
-        </div>
-      </section>
-    </main>
-
-    <footer class="border-t border-dag-green/15 bg-[#f1e5d1]">
-      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-sm text-dag-green sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p>© DagAI Tourism • DagAI_tourism.com</p>
-        <a href="https://ai-service777.netlify.app/" target="_blank" rel="noopener noreferrer" class="font-semibold underline underline-offset-4">
-          Основной лендинг
-        </a>
-      </div>
-    </footer>
-
-    <div id="bookingModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-backdrop" data-close="booking"></div>
-      <div class="modal-panel reveal-scale" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
-        <h3 id="bookingModalTitle" class="font-display text-2xl text-dag-green">Подтверждение брони</h3>
-        <div class="mt-4 space-y-2 text-sm text-[#1f2a23]">
-          <p><span class="font-semibold">Номер:</span> <span id="modalRoom">—</span></p>
-          <p><span class="font-semibold">Даты:</span> <span id="modalDates">—</span></p>
-          <p><span class="font-semibold">Ночей:</span> <span id="modalNights">0</span></p>
-          <p class="text-base font-extrabold"><span class="font-semibold">Сумма:</span> <span id="modalTotal">0 ₽</span></p>
-        </div>
-        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <button id="proceedToPay" class="btn-main rounded-xl px-4 py-3 text-sm font-bold" aria-label="Перейти к оплате">Перейти к оплате</button>
-          <button data-close="booking" class="rounded-xl border border-dag-green/20 px-4 py-3 text-sm font-semibold text-dag-green" aria-label="Закрыть окно бронирования">Закрыть</button>
-        </div>
+<!-- AI ASSISTANT -->
+<section id="ai" class="section section--stone">
+  <div class="container" data-reveal>
+    <div class="ai-teaser">
+      <div class="ai-teaser__icon" aria-hidden="true">◆</div>
+      <div>
+        <span class="section__eyebrow">AI-помощник</span>
+        <h2 class="ai-teaser__title">Сайт, который понимает гостя</h2>
+        <p class="ai-teaser__text">DagAI анализирует контекст вашего визита и подбирает идеальный номер, маршрут и темп отдыха. Всё — мгновенно, на основе 14 сигналов о вашем визите. Никаких форм, никаких опросов.</p>
+        <span class="ai-teaser__hint">💎 Найдите Intelligence Panel в правом нижнем углу</span>
       </div>
     </div>
+  </div>
+</section>
 
-    <div id="paymentModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-backdrop" data-close="payment"></div>
-      <div class="modal-panel reveal-scale" role="dialog" aria-modal="true" aria-labelledby="paymentModalTitle">
-        <h3 id="paymentModalTitle" class="font-display text-2xl text-dag-green">Оплата предоплаты</h3>
-        <div id="paymentProgress" class="mt-5">
-          <div class="h-3 w-full overflow-hidden rounded-full bg-[#eadcc6]">
-            <div id="paymentBar" class="h-full w-0 rounded-full bg-dag-gold transition-all duration-700"></div>
-          </div>
-          <p id="paymentText" class="mt-3 text-sm font-semibold text-[#334137]">Инициализация платежа...</p>
-        </div>
-
-        <div id="paymentResult" class="mt-5 hidden rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-          <p class="text-lg font-extrabold text-emerald-700">ОПЛАЧЕНО</p>
-          <div class="mt-3 rounded-lg bg-white p-3 text-sm text-[#1f2a23] shadow-sm">
-            <p class="font-semibold">Чек</p>
-            <p class="mt-1"><span class="font-semibold">Объект:</span> DagAI Tourism / Горная Вилла Гуниб</p>
-            <p><span class="font-semibold">Номер:</span> <span id="receiptRoom">—</span></p>
-            <p><span class="font-semibold">Даты:</span> <span id="receiptDates">—</span></p>
-            <p><span class="font-semibold">Сумма:</span> <span id="receiptTotal">0 ₽</span></p>
-            <p><span class="font-semibold">Статус:</span> Предоплата 30%</p>
-            <p><span class="font-semibold">Время:</span> <span id="receiptTime">—</span></p>
-          </div>
-          <p class="mt-3 text-sm font-semibold text-emerald-700">Уведомление хозяину отправлено.</p>
-        </div>
-
-        <div class="mt-6">
-          <button data-close="payment" class="rounded-xl border border-dag-green/20 px-4 py-3 text-sm font-semibold text-dag-green" aria-label="Закрыть окно оплаты">
-            Закрыть
-          </button>
-        </div>
-      </div>
+<!-- BOOKING -->
+<section id="booking" class="section section--green">
+  <div class="container">
+    <div class="section__head" data-reveal>
+      <span class="section__eyebrow">Бронирование</span>
+      <h2>Оставьте заявку</h2>
     </div>
+    <form id="booking-form" class="booking-form" data-reveal autocomplete="off" novalidate>
+      <div class="booking-form__field">
+        <label for="bf-name">Имя</label>
+        <input id="bf-name" name="name" type="text" placeholder="Ваше имя" required>
+      </div>
+      <div class="booking-form__field">
+        <label for="bf-phone">Телефон</label>
+        <input id="bf-phone" name="phone" type="tel" placeholder="+7 ___ ___ __ __" required>
+      </div>
+      <div class="booking-form__field">
+        <label for="bf-checkin">Дата заезда</label>
+        <input id="bf-checkin" name="checkin" type="date" required>
+      </div>
+      <div class="booking-form__field">
+        <label for="bf-checkout">Дата отъезда</label>
+        <input id="bf-checkout" name="checkout" type="date" required>
+      </div>
+      <div class="booking-form__field booking-form__field--full">
+        <label for="bf-room">Тип номера</label>
+        <select id="bf-room" name="roomType" required>
+          <option value="">— Выберите номер —</option>
+        </select>
+      </div>
+      <div class="booking-form__submit">
+        <button type="submit" class="btn btn--gold">Отправить заявку</button>
+      </div>
+    </form>
+  </div>
+</section>
 
-    <script src="./script.js"></script>
-  </body>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__brand">DagAI<span class="footer__brand-mark">·</span>Tourism</div>
+    <div>© <span id="year">2026</span> · Демо-сайт: DagAI Tourism · Создано с помощью ИИ</div>
+  </div>
+</footer>
+
+<!-- Palantir Intelligence Panel -->
+<button id="palantir-trigger" class="pal-trigger" type="button" aria-label="Открыть Intelligence Panel">💎</button>
+<div id="palantir-root"></div>
+
+<script type="module" src="js/main.js?v=20260426b"></script>
+
+</body>
 </html>
