@@ -1,6 +1,5 @@
 [build]
   publish = "."
-  command = "bash bump.sh"
 
 [build.environment]
   NODE_VERSION = "20"
