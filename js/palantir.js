@@ -518,7 +518,10 @@ async function runAnalysis() {
     state.result   = res;
     state.thinking = res.thinking || null;
     state.rate     = res.rate || state.rate;
-    if (!res.ok) state.error = res.error || 'Неизвестная ошибка';
+    if (!res.ok) {
+      state.error = res.error || 'Неизвестная ошибка';
+      console.error('[palantir] AI error:', state.error, res.raw);
+    }
   } catch (e) {
     state.error    = String(e?.message || e);
     state.result   = null;
