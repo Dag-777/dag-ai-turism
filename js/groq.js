@@ -1,4 +1,10 @@
 // DagAI Tourism — Quantum Strategist v5.0
+// Groq вызывается напрямую из браузера — без серверных функций
+
+const GROQ_KEY     = 'gsk_demo_replace_me';
+const GROQ_URL     = 'https://api.groq.com/openai/v1/chat/completions';
+const PRIMARY_MODEL  = 'deepseek-r1-distill-llama-70b';
+const FALLBACK_MODEL = 'llama-3.3-70b-versatile';
 
 export const SYSTEM_PROMPT = `Ты — квантовый аналитик горной виллы DagAI Tourism (Гуниб, Дагестан, 1500м над морем).
 На входе — 40+ сигналов о посетителе: биометрические отпечатки браузера, геолокация, аппаратные характеристики, поведение, контекст из Telegram-бота.
@@ -66,49 +72,75 @@ JSON-схема ответа:
   }
 }`;
 
-function readRate(headers) {
-  return {
-    rpmRemaining: headers.get('x-rpm-remaining') || '',
-    tpmRemaining: headers.get('x-tpm-remaining') || '',
-    rpmLimit:     headers.get('x-rpm-limit')     || '',
-    tpmLimit:     headers.get('x-tpm-limit')     || '',
-  };
+function extractThinking(content) {
+  if (!content || typeof content !== 'string') return { thinking: null, answer: content || '' };
+  const m = content.match(/<think>([\s\S]*?)<\/think>/i);
+  const thinking = m ? m[1].trim() : null;
+  const answer = content
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/```\s*$/i, '')
+    .trim();
+  return { thinking, answer };
 }
 
+async function callGroq(model, useJson) {
+  const body = {
+    model,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user',   content: _lastPayload },
+    ],
+    max_completion_tokens: 3000,
+    temperature: 0.6,
+  };
+  if (useJson) body.response_format = { type: 'json_object' };
+  return fetch(GROQ_URL, {
+    method:  'POST',
+    headers: { 'Authorization': `Bearer ${GROQ_KEY}`, 'Content-Type': 'application/json' },
+    body:    JSON.stringify(body),
+  });
+}
+
+let _lastPayload = '';
+
 export async function analyzeVisitor(signals) {
-  const userPayload = JSON.stringify(signals, null, 2);
+  _lastPayload = JSON.stringify(signals, null, 2);
+
   let res;
   try {
-    res = await fetch('/api/strategist', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ system: SYSTEM_PROMPT, user: userPayload }),
-    });
+    res = await callGroq(PRIMARY_MODEL, false);
+    if (res.status === 429) {
+      await new Promise(r => setTimeout(r, 2000));
+      res = await callGroq(PRIMARY_MODEL, false);
+    }
+    if (!res.ok) res = await callGroq(FALLBACK_MODEL, true);
   } catch (e) {
     return { ok: false, error: `Сеть недоступна: ${e.message}`, rate: {}, raw: null, thinking: null };
   }
 
-  const rate = readRate(res.headers);
+  const rate = {
+    rpmRemaining: res.headers.get('x-ratelimit-remaining-requests') || '',
+    tpmRemaining: res.headers.get('x-ratelimit-remaining-tokens')   || '',
+    rpmLimit:     res.headers.get('x-ratelimit-limit-requests')     || '',
+    tpmLimit:     res.headers.get('x-ratelimit-limit-tokens')       || '',
+  };
+
   let data = null;
-  try { data = await res.json(); } catch { /* keep null */ }
+  try { data = await res.json(); } catch {}
 
   if (!res.ok || !data) {
-    return { ok: false, error: data?.error || `HTTP ${res.status}`, rate, raw: data, thinking: null };
+    return { ok: false, error: data?.error?.message || `HTTP ${res.status}`, rate, raw: data, thinking: null };
   }
 
-  const message  = data.choices?.[0]?.message;
-  const thinking = message?.thinking || null;
-  const content  = message?.content;
+  const rawContent = data.choices?.[0]?.message?.content || '';
+  const { thinking, answer } = extractThinking(rawContent);
 
   let parsed = null;
-  if (typeof content === 'string') {
-    try { parsed = JSON.parse(content); }
-    catch {
-      const stripped = content.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
-      try { parsed = JSON.parse(stripped); } catch { parsed = null; }
-    }
-  } else if (content && typeof content === 'object') {
-    parsed = content;
+  try { parsed = JSON.parse(answer); }
+  catch {
+    const s = answer.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+    try { parsed = JSON.parse(s); } catch {}
   }
 
   if (!parsed) {
