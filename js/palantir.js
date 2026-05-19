@@ -314,27 +314,28 @@ function strategyCard() {
   const p = r.portrait || {};
 
   let sentBanner = '';
-  if (state.sent === 'sent') sentBanner = `<div class="pal-sent-banner pal-sent-banner--sent">✅ Стратегия отправлена менеджеру</div>`;
-  if (state.sent === 'held') sentBanner = `<div class="pal-sent-banner pal-sent-banner--held">🔒 Зафиксировано. Менеджер не уведомлён.</div>`;
+  if (state.sent === 'tg-sending') sentBanner = `<div class="pal-sent-banner pal-sent-banner--sending">⏳ Отправка в Telegram…</div>`;
+  if (state.sent === 'tg-manager') sentBanner = `<div class="pal-sent-banner pal-sent-banner--sent">✅ Менеджер получил оффер в Telegram</div>`;
+  if (state.sent === 'tg-both')    sentBanner = `<div class="pal-sent-banner pal-sent-banner--sent">✅ Менеджеру + клиенту отправлено в Telegram 🎁</div>`;
+  if (state.sent === 'held')       sentBanner = `<div class="pal-sent-banner pal-sent-banner--held">🔒 Зафиксировано. Отправка отложена.</div>`;
 
-  const discount = s.discount ? encodeURIComponent(s.discount) : '';
-  const offer    = s.offer    ? encodeURIComponent(s.offer.slice(0, 60))    : '';
-  const tgStart  = `client_offer__tier_${s.price_tier || 'std'}${discount ? '__disc_' + discount : ''}`;
-  const tgClientLink = `${TG_BOT}?start=${encodeURIComponent(tgStart)}`;
+  const hasTgId  = state.signals?.tg_from && state.signals.tg_from !== 'нет';
+  const clientLabel = hasTgId
+    ? 'МЕНЕДЖЕРУ + КЛИЕНТУ В БОТ'
+    : 'ОТПРАВИТЬ МЕНЕДЖЕРУ В БОТ';
 
   const actionBtns = state.sent ? '' : `
     <div class="pal-action-row">
-      <button class="pal-btn pal-btn-send" id="pal-send" type="button">📤 МЕНЕДЖЕРУ</button>
       <button class="pal-btn pal-btn-hold" id="pal-hold" type="button">🔒 ПРИДЕРЖАТЬ</button>
     </div>
     <div class="pal-action-row" style="margin-top:6px">
-      <a href="${tgClientLink}" class="pal-btn-client-offer" target="_blank" rel="noopener" id="pal-send-client">
+      <button class="pal-btn-client-offer" id="pal-send-client" type="button">
         <span class="pal-client-icon">✈</span>
         <span class="pal-client-text">
-          <span class="pal-client-label">ОТПРАВИТЬ КЛИЕНТУ</span>
-          <span class="pal-client-sub">${s.discount ? '🎁 ' + esc(s.discount) : 'персональный оффер · без скидки'}</span>
+          <span class="pal-client-label">${clientLabel}</span>
+          <span class="pal-client-sub">${s.discount ? '🎁 ' + esc(s.discount) : 'персональный оффер · через Telegram бот'}</span>
         </span>
-      </a>
+      </button>
     </div>`;
 
   return `
@@ -475,12 +476,8 @@ function bind() {
   document.getElementById('pal-toggle-raw')?.addEventListener('click', () => { state.showRaw = !state.showRaw; render(); });
   document.getElementById('pal-think-toggle')?.addEventListener('click', () => { state.showThink = !state.showThink; render(); });
   document.getElementById('pal-overlay')?.addEventListener('click', (e) => { if (e.target.id === 'pal-overlay') closePanel(); });
-  document.getElementById('pal-send')?.addEventListener('click', () => {
-    state.sent = 'sent';
-    console.log('[palantir] SENT:', state.result?.parsed?.strategy);
-    render();
-  });
   document.getElementById('pal-hold')?.addEventListener('click', () => { state.sent = 'held'; render(); });
+  document.getElementById('pal-send-client')?.addEventListener('click', sendOfferViaTelegram);
 }
 
 function render() {
@@ -530,6 +527,40 @@ async function runAnalysis() {
     state.loading = false;
     render();
   }
+}
+
+async function sendOfferViaTelegram() {
+  const btn = document.getElementById('pal-send-client');
+  if (!btn || state.sent === 'tg-sending') return;
+
+  const prevSent = state.sent;
+  state.sent = 'tg-sending';
+  render();
+
+  try {
+    const res = await fetch('/api/send-offer', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        portrait: state.result?.parsed?.portrait,
+        strategy: state.result?.parsed?.strategy,
+        signals:  { ...state.signals, _tg_id_full: state.signals?._meta?.tg?.tg_id || '' },
+        siteUrl:  location.href,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok && data.ok) {
+      state.sent = data.sentToClient ? 'tg-both' : 'tg-manager';
+    } else {
+      state.sent = prevSent;
+      state.error = data?.error || `Ошибка отправки (${res.status})`;
+    }
+  } catch (e) {
+    state.sent = prevSent;
+    state.error = `Сеть: ${e.message}`;
+  }
+  render();
 }
 
 export function initPalantir() {

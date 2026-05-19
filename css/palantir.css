@@ -842,8 +842,9 @@
   font-weight: 600;
   letter-spacing: 0.04em;
 }
-.pal-sent-banner--sent { background: rgba(0,255,159,0.08); border: 1px solid rgba(0,255,159,0.28); color: var(--pal-green); }
-.pal-sent-banner--held { background: rgba(240,165,0,0.07); border: 1px solid rgba(240,165,0,0.22); color: var(--pal-amber); }
+.pal-sent-banner--sent    { background: rgba(0,255,159,0.08); border: 1px solid rgba(0,255,159,0.28); color: var(--pal-green); }
+.pal-sent-banner--held    { background: rgba(240,165,0,0.07); border: 1px solid rgba(240,165,0,0.22); color: var(--pal-amber); }
+.pal-sent-banner--sending { background: rgba(41,182,246,0.07); border: 1px solid rgba(41,182,246,0.25); color: var(--pal-tg); animation: palBlink 1s infinite; }
 
 /* ══ RAW JSON ════════════════════════════════════════════════════════════ */
 .pal-raw {
