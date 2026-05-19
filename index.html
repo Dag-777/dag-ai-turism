@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
 
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="css/palantir.css?v=20260426b">
+  <link rel="stylesheet" href="css/palantir.css?v=20260519">
 </head>
 <body>
 
@@ -28,6 +28,7 @@
       <li><a href="#routes">Маршруты</a></li>
       <li><a href="#booking">Бронирование</a></li>
       <li><a href="#ai">AI-помощник</a></li>
+      <li><a href="https://t.me/DagAi_tourism_bot" target="_blank" rel="noopener" class="nav__tg-link">✈ Telegram</a></li>
     </ul>
     <button class="nav__burger" type="button" aria-label="Открыть меню">
       <span></span><span></span><span></span>
@@ -44,7 +45,7 @@
     <p class="hero__sub">Горная Вилла Гуниб · AI-консьерж 24/7. Древние сёла, бирюзовые каньоны и панорамы, от которых перехватывает дыхание.</p>
     <div class="hero__cta">
       <a href="#booking" class="btn btn--gold">Забронировать сейчас</a>
-      <a href="#routes" class="btn btn--outline-stone">Посмотреть маршруты</a>
+      <a href="https://t.me/DagAi_tourism_bot?start=site_hero" target="_blank" rel="noopener" class="btn btn--tg">✈ Написать в Telegram</a>
     </div>
   </div>
   <div class="hero__scroll" aria-hidden="true"></div>
@@ -78,10 +79,14 @@
     <div class="ai-teaser">
       <div class="ai-teaser__icon" aria-hidden="true">◆</div>
       <div>
-        <span class="section__eyebrow">AI-помощник</span>
-        <h2 class="ai-teaser__title">Сайт, который понимает гостя</h2>
-        <p class="ai-teaser__text">DagAI анализирует контекст вашего визита и подбирает идеальный номер, маршрут и темп отдыха. Всё — мгновенно, на основе 14 сигналов о вашем визите. Никаких форм, никаких опросов.</p>
-        <span class="ai-teaser__hint">💎 Найдите Intelligence Panel в правом нижнем углу</span>
+        <span class="section__eyebrow">Quantum Intelligence</span>
+        <h2 class="ai-teaser__title">Сайт, который видит насквозь</h2>
+        <p class="ai-teaser__text">DagAI собирает 40+ сигналов о каждом госте — canvas-отпечаток браузера, GPU, батарею, геолокацию, контекст из Telegram-бота — и строит квантовый портрет за секунды. Никаких форм, никаких опросов.</p>
+        <div class="ai-teaser__actions">
+          <button class="btn btn--gold" onclick="document.getElementById('palantir-trigger').click()">💎 Открыть Intelligence Panel</button>
+          <a href="https://t.me/DagAi_tourism_bot?start=site_ai" target="_blank" rel="noopener" class="btn btn--tg-outline">✈ Бот @DagAi_tourism_bot</a>
+        </div>
+        <p class="ai-teaser__hint">Бот и сайт связаны · Палантир видит весь путь гостя</p>
       </div>
     </div>
   </div>
@@ -119,6 +124,7 @@
       </div>
       <div class="booking-form__submit">
         <button type="submit" class="btn btn--gold">Отправить заявку</button>
+        <a href="https://t.me/DagAi_tourism_bot?start=booking" target="_blank" rel="noopener" class="btn btn--tg">✈ Забронировать через Telegram</a>
       </div>
     </form>
   </div>
@@ -128,7 +134,10 @@
 <footer class="footer">
   <div class="container">
     <div class="footer__brand">DagAI<span class="footer__brand-mark">·</span>Tourism</div>
-    <div>© <span id="year">2026</span> · Демо-сайт: DagAI Tourism · Создано с помощью ИИ</div>
+    <div class="footer__tg">
+      <a href="https://t.me/DagAi_tourism_bot" target="_blank" rel="noopener">✈ @DagAi_tourism_bot</a>
+    </div>
+    <div>© <span id="year">2026</span> · DagAI Tourism · Создано с помощью ИИ</div>
   </div>
 </footer>
 
@@ -136,7 +145,7 @@
 <button id="palantir-trigger" class="pal-trigger" type="button" aria-label="Открыть Intelligence Panel">💎</button>
 <div id="palantir-root"></div>
 
-<script type="module" src="js/main.js?v=20260426b"></script>
+<script type="module" src="js/main.js?v=20260519"></script>
 
 </body>
 </html>
