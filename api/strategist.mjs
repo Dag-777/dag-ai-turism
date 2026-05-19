@@ -2,6 +2,8 @@
 // Uses DeepSeek-R1-distill which returns <think> reasoning blocks.
 // Extracts thinking separately so the UI can show real AI reasoning.
 
+export const config = { runtime: 'edge' };
+
 const PRIMARY_MODEL  = "deepseek-r1-distill-llama-70b";
 const FALLBACK_MODEL = "llama-3.3-70b-versatile";
 const GROQ_URL       = "https://api.groq.com/openai/v1/chat/completions";

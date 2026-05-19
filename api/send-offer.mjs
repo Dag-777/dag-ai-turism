@@ -1,6 +1,8 @@
 // DagAI Tourism — Telegram Offer Sender v1.0
 // Вариант 3: отправляет менеджеру всегда + клиенту если пришёл из бота (есть tg_id)
 
+export const config = { runtime: 'edge' };
+
 const CORS = {
   "Access-Control-Allow-Origin":  "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
