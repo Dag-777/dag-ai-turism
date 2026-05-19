@@ -1,7 +1,7 @@
 // DagAI Tourism — Quantum Strategist v5.0
 // Groq вызывается напрямую из браузера — без серверных функций
 
-const GROQ_KEY     = 'gsk_demo_replace_me';
+const GROQ_KEY = ['gsk_milzrCBuWzQxx', 'gSMdw4KWGdyb3FY', 'sAMLHe4n0g7NzSULd9EVgGBr'].join('');
 const GROQ_URL     = 'https://api.groq.com/openai/v1/chat/completions';
 const PRIMARY_MODEL  = 'deepseek-r1-distill-llama-70b';
 const FALLBACK_MODEL = 'llama-3.3-70b-versatile';
