@@ -1,8 +1,8 @@
 // Entry point: orchestrates rendering, navigation, scroll reveal, booking, panel.
 
-import { renderRooms, renderRoutes } from './rooms.js?v=20260519';
-import { initBooking }                from './booking.js?v=20260519';
-import { initPalantir }               from './palantir.js?v=20260519';
+import { renderRooms, renderRoutes } from './rooms.js?v=20260522';
+import { initBooking }                from './booking.js?v=20260522';
+import { initPalantir }               from './palantir.js?v=20260522';
 
 function initNav() {
   const nav = document.querySelector('.nav');
