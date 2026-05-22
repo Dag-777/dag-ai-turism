@@ -30,6 +30,29 @@ function trunc(s, n) {
   return str.length > n ? str.slice(0, n - 1) + '…' : str;
 }
 
+// ── VECTOR FALLBACK (если AI не вернул vector — строим из портрета) ───────
+function inferVector(portrait) {
+  const seg = portrait?.segment || '';
+  const interests = (portrait?.interests || []).map(s => s.toLowerCase());
+  const v = { роскошь:30, природа:55, уединение:45, активность:40, семья:30, гастрономия:30, история:40, экстрим:20 };
+  if (seg === 'luxury')    { v.роскошь = 85; v.уединение = 70; v.гастрономия = 60; }
+  if (seg === 'family')    { v.семья = 85; v.активность = 60; v.природа = 65; }
+  if (seg === 'nomad')     { v.активность = 80; v.экстрим = 65; v.природа = 75; }
+  if (seg === 'corporate') { v.роскошь = 72; v.гастрономия = 65; v.уединение = 55; }
+  if (seg === 'budget')    { v.природа = 70; v.активность = 65; v.экстрим = 45; }
+  interests.forEach(i => {
+    if (i.includes('гор') || i.includes('природ'))     v.природа    = Math.min(100, v.природа    + 18);
+    if (i.includes('истор') || i.includes('дербент'))  v.история    = Math.min(100, v.история    + 22);
+    if (i.includes('экстрим') || i.includes('активн')) v.активность = Math.min(100, v.активность + 18);
+    if (i.includes('семь') || i.includes('дети'))      v.семья      = Math.min(100, v.семья      + 22);
+    if (i.includes('кухн') || i.includes('вин') || i.includes('гастр')) v.гастрономия = Math.min(100, v.гастрономия + 22);
+    if (i.includes('уедин') || i.includes('тих'))      v.уединение  = Math.min(100, v.уединение  + 18);
+    if (i.includes('роскош') || i.includes('люкс'))    v.роскошь    = Math.min(100, v.роскошь    + 22);
+    if (i.includes('каньон') || i.includes('поход'))   v.экстрим    = Math.min(100, v.экстрим    + 18);
+  });
+  return v;
+}
+
 // ── RADAR CHART ───────────────────────────────────────────────────────────
 const RADAR_LABELS = {
   роскошь:    'Роскошь',
@@ -99,8 +122,10 @@ function vectorTechInfo(signals) {
 }
 
 function vectorSection() {
-  const vector  = state.result?.parsed?.vector;
-  const quantum = state.result?.parsed?.quantum;
+  const rawVector = state.result?.parsed?.vector;
+  const portrait  = state.result?.parsed?.portrait;
+  const vector    = rawVector || (portrait ? inferVector(portrait) : null);
+  const quantum   = state.result?.parsed?.quantum;
 
   if (state.loading && !vector) {
     return `
