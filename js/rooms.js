@@ -115,7 +115,7 @@ function routeCardHTML(r) {
         <p class="route-card__desc">${r.description}</p>
         <div class="route-card__foot">
           <span class="route-card__price">${r.price}</span>
-          <a href="${TG_BOT}?start=${r.tgStart}" class="btn btn--outline-gold" target="_blank" rel="noopener">Подробнее ✈</a>
+          <a href="${TG_BOT}?start=${r.tgStart}" class="btn btn--outline-gold" target="_blank" rel="noopener" data-route-id="${r.id}">Подробнее ✈</a>
         </div>
       </div>
     </article>`;

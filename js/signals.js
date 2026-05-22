@@ -1,9 +1,10 @@
-// DagAI Intelligence — Quantum Signal Collector v5.0
+// DagAI Intelligence — Quantum Signal Collector v6.0
 // 40+ real browser signals including canvas/audio/webgl fingerprints,
-// hardware, network, Telegram deep-link context, and behavioral data.
+// hardware, network, Telegram deep-link context, and real behavioral data.
 
-import { getVisitorId } from './fingerprint.js?v=20260519';
-import { getGeo }       from './geo.js?v=20260519';
+import { getVisitorId }      from './fingerprint.js?v=20260519';
+import { getGeo }            from './geo.js?v=20260519';
+import { getBehaviorSignals } from './behavior.js?v=20260522';
 
 const startTime = Date.now();
 let maxScroll = 0;
@@ -273,6 +274,14 @@ export const SIGNAL_LABELS = {
   clicks:          'разделы клики',
   localHour:       'час визита',
   dayOfWeek:       'день недели',
+  // — INTENT (реальный трекинг) —
+  topViewedItem:   'TOP просмотр',
+  topViewedSec:    'время на TOP (с)',
+  viewedItemsLog:  'лог просмотров',
+  clickedItemsLog: 'лог кликов',
+  sectionsPath:    'путь по сайту',
+  bookedItems:     'нажал забронировать',
+  uniqueItemsSeen: 'уникальных карточек',
   // — TELEGRAM —
   tg_from:         'из Telegram бота',
   tg_ctx:          'контекст бота',
@@ -291,6 +300,7 @@ export const SIGNAL_CATEGORIES = {
   'MEDIA':      ['cameras', 'microphones'],
   'DISPLAY':    ['colorScheme', 'hdr', 'p3color', 'fontsCount'],
   'BEHAVIOR':   ['referrer', 'timeOnPage', 'idleTime', 'scrollDepth', 'mouseActivity', 'clicks', 'localHour', 'dayOfWeek'],
+  'INTENT':     ['topViewedItem', 'topViewedSec', 'viewedItemsLog', 'clickedItemsLog', 'sectionsPath', 'bookedItems', 'uniqueItemsSeen'],
   'TELEGRAM':   ['tg_from', 'tg_ctx'],
 };
 
@@ -382,6 +392,8 @@ export async function collectSignals() {
     // Telegram
     tg_from:         tg.from_bot ? `да · @DagAi_tourism_bot${tg.tg_id ? ' · id:' + tg.tg_id : ''}` : 'нет',
     tg_ctx:          tg.tg_ctx || '',
+    // Real Intent (what user actually looked at)
+    ...getBehaviorSignals(),
   };
 
   signals._meta = {

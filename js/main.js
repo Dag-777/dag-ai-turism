@@ -3,6 +3,7 @@
 import { renderRooms, renderRoutes } from './rooms.js?v=20260522';
 import { initBooking }                from './booking.js?v=20260522';
 import { initPalantir }               from './palantir.js?v=20260522';
+import { initBehaviorTracker }        from './behavior.js?v=20260522';
 
 function initNav() {
   const nav = document.querySelector('.nav');
@@ -70,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initSmoothAnchors();
   initBooking();
+  initBehaviorTracker();
   initPalantir();
   initYear();
 });
