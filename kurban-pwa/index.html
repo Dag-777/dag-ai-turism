@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000">
 <link rel="manifest" href="manifest.json">
 <title>Курбан-байрам Мубарак</title>
@@ -13,16 +13,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
 
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;background:#000;overflow:hidden}
-body::before{
-  content:'';position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.004) 3px,rgba(255,255,255,0.004) 4px);
-  pointer-events:none;z-index:3;
+
+html,body{
+  width:100%;height:100%;
+  background:#000;
+  overflow:hidden;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
 }
-.bg{position:fixed;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 50%,#06020e 0%,#020108 45%,#000 100%);z-index:0}
+
+/* ── Kaaba background ── */
+.bg{
+  position:fixed;inset:0;z-index:0;
+  background-image:url('kaaba.jpg');
+  background-size:cover;
+  background-position:center 40%;
+  background-repeat:no-repeat;
+}
+
+/* ── Dark overlay so text is readable ── */
+.overlay{
+  position:fixed;inset:0;z-index:1;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.82) 0%,
+    rgba(0,0,0,0.60) 30%,
+    rgba(0,0,0,0.55) 55%,
+    rgba(0,0,0,0.78) 100%
+  );
+}
+
+/* ── CRT scanlines ── */
+.scan{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 3px,
+    rgba(255,255,255,0.0035) 3px,rgba(255,255,255,0.0035) 4px
+  );
+}
+
+/* ── Canvas particles ── */
 canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
 
-/* ── HINT (identical to liberté) ── */
+/* ── HINT ring ── */
 #hint{
   position:fixed;inset:0;z-index:50;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
@@ -30,62 +63,82 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
 }
 .ring{
   width:90px;height:90px;border-radius:50%;
-  border:2px solid rgba(255,255,255,0.25);
+  border:2px solid rgba(255,255,255,0.28);
   display:flex;align-items:center;justify-content:center;
   animation:rp 2s ease-in-out infinite;
 }
-.ring::after{content:'▶';font-size:32px;color:rgba(255,255,255,0.5);margin-left:5px}
+.ring::after{
+  content:'▶';font-size:32px;color:rgba(255,255,255,0.55);margin-left:5px;
+}
 @keyframes rp{
   0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,255,255,0.15)}
   50%{transform:scale(1.1);box-shadow:0 0 0 22px rgba(255,255,255,0)}
 }
-#hint p{font-family:-apple-system,Helvetica,sans-serif;font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:5px;text-transform:uppercase}
+#hint p{
+  font-family:-apple-system,'Helvetica Neue',sans-serif;
+  font-size:12px;color:rgba(255,255,255,0.32);
+  letter-spacing:5px;text-transform:uppercase;
+}
 
-/* ── CONTENT (identical layout to liberté) ── */
+/* ── Content: centered flex column ── */
 .content{
   position:fixed;inset:0;z-index:20;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;width:100%;padding:0 4vw;
-  gap:clamp(2px,1vw,10px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:0 6vw;
+  gap:clamp(4px,1.2vw,12px);
 }
+
+/* ── Neon text base ──
+   KEY FIX: inline-block so flex centers it horizontally.
+   block would start at left edge and overflow right only.
+── */
 .neon{
-  font-family:'Russo One','Impact',sans-serif;
-  opacity:0;display:block;
-  will-change:transform,opacity,filter;
+  display:inline-block;           /* ← fixes left-edge alignment */
+  opacity:0;
+  will-change:transform,opacity;  /* ← no 'filter': avoids blur compositing artifact */
   white-space:nowrap;
-  transform:translateZ(0);-webkit-transform:translateZ(0);
+  /* GPU layer for smooth transforms */
+  transform:translateZ(0);
+  -webkit-transform:translateZ(0);
+  /* Sharp rendering */
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  font-family:'Russo One','Impact',sans-serif;
 }
 
-/* Font sizes — same proportions as liberté l1/l2/l3 */
-#l1{font-size:clamp(40px,11vw,104px);line-height:1.1;}
-#l2{font-size:clamp(30px,8.5vw,78px);line-height:1.14;}
-#l3{font-size:clamp(36px,10vw,94px);line-height:1.08;}
+/* Same size proportions as liberté l1/l2/l3 */
+#l1{font-size:clamp(36px,10vw,96px);line-height:1.1;}
+#l2{font-size:clamp(28px,7.8vw,74px);line-height:1.14;}
+#l3{font-size:clamp(32px,9vw,88px);line-height:1.08;}
 
-/* ── ENTRY ANIMATIONS — exact copy from liberté ── */
+/* ── ENTRY animations — exact copy of liberté ── */
 @keyframes fromLeft{
   0%  {opacity:0;transform:translateX(-130px) skewX(12deg) translateZ(0);filter:blur(6px)}
-  55% {opacity:1;transform:translateX(14px) skewX(-3deg) translateZ(0);filter:blur(0)}
-  75% {transform:translateX(-6px) skewX(1deg) translateZ(0)}
-  100%{opacity:1;transform:translateX(0) skewX(0) translateZ(0);filter:blur(0)}
+  55% {opacity:1;transform:translateX(14px)   skewX(-3deg) translateZ(0);filter:blur(0)}
+  75% {         transform:translateX(-6px)    skewX(1deg)  translateZ(0)}
+  100%{opacity:1;transform:translateX(0)      skewX(0)     translateZ(0);filter:blur(0)}
 }
 @keyframes fromTop{
   0%  {opacity:0;transform:translateY(-110px) scale(.82) translateZ(0);filter:blur(5px)}
-  58% {opacity:1;transform:translateY(12px) scale(1.03) translateZ(0);filter:blur(0)}
-  78% {transform:translateY(-5px) scale(.99) translateZ(0)}
-  100%{opacity:1;transform:translateY(0) scale(1) translateZ(0);filter:blur(0)}
+  58% {opacity:1;transform:translateY(12px)   scale(1.03) translateZ(0);filter:blur(0)}
+  78% {         transform:translateY(-5px)    scale(.99)  translateZ(0)}
+  100%{opacity:1;transform:translateY(0)      scale(1)    translateZ(0);filter:blur(0)}
 }
 @keyframes fromRight{
-  0%  {opacity:0;transform:translateX(130px) skewX(-12deg) translateZ(0);filter:blur(6px)}
-  55% {opacity:1;transform:translateX(-14px) skewX(3deg) translateZ(0);filter:blur(0)}
-  75% {transform:translateX(6px) skewX(-1deg) translateZ(0)}
-  100%{opacity:1;transform:translateX(0) skewX(0) translateZ(0);filter:blur(0)}
+  0%  {opacity:0;transform:translateX(130px)  skewX(-12deg) translateZ(0);filter:blur(6px)}
+  55% {opacity:1;transform:translateX(-14px)  skewX(3deg)   translateZ(0);filter:blur(0)}
+  75% {         transform:translateX(6px)     skewX(-1deg)  translateZ(0)}
+  100%{opacity:1;transform:translateX(0)      skewX(0)      translateZ(0);filter:blur(0)}
 }
 @keyframes fadeOut{
-  0%  {opacity:1;filter:blur(0);transform:scale(1)}
-  100%{opacity:0;filter:blur(5px);transform:scale(.93)}
+  0%  {opacity:1;transform:scale(1) translateZ(0)}
+  100%{opacity:0;transform:scale(.92) translateZ(0)}
 }
 
-/* ── LOOP ANIMATIONS — same as liberté, plus extras ── */
+/* ── LOOP breathe animations — same as liberté ── */
 @keyframes neonFlicker{
   0%,14%,16%,18%,27%,49%,94%,100%{
     color:#ecfaff;
@@ -95,29 +148,47 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
   17%{color:rgba(236,250,255,.38);text-shadow:0 0 4px rgba(68,200,255,.2)}
 }
 @keyframes goldBreathe{
-  0%,100%{color:#fff9e8;text-shadow:0 0 4px #fff,0 0 10px #fff0a0,0 0 22px #ffc020,0 0 48px #de7c00,0 0 90px #9e4c00,0 0 150px rgba(165,58,0,.38)}
+  0%,100%{
+    color:#fff9e8;
+    text-shadow:0 0 4px #fff,0 0 10px #fff0a0,0 0 22px #ffc020,0 0 48px #de7c00,0 0 90px #9e4c00,0 0 150px rgba(165,58,0,.38)
+  }
   50%{text-shadow:0 0 8px #fff,0 0 18px #fffcc0,0 0 38px #ffd040,0 0 75px #e88e00,0 0 140px #be5e00,0 0 238px rgba(205,78,0,.55)}
 }
 @keyframes rosePulse{
-  0%,100%{color:#fff0f6;text-shadow:0 0 4px #fff,0 0 10px #ffbad6,0 0 22px #ff509e,0 0 48px #de0668,0 0 90px #9e0046,0 0 150px rgba(162,0,63,.38)}
+  0%,100%{
+    color:#fff0f6;
+    text-shadow:0 0 4px #fff,0 0 10px #ffbad6,0 0 22px #ff509e,0 0 48px #de0668,0 0 90px #9e0046,0 0 150px rgba(162,0,63,.38)
+  }
   50%{text-shadow:0 0 9px #fff,0 0 18px #ffd4ea,0 0 42px #ff70b4,0 0 82px #e81876,0 0 148px #be005c,0 0 252px rgba(198,0,88,.55)}
 }
 @keyframes whitePulse{
-  0%,100%{color:#fff;text-shadow:0 0 4px #fff,0 0 12px rgba(255,255,255,.9),0 0 28px rgba(255,255,255,.6),0 0 64px rgba(255,255,255,.35)}
-  50%{text-shadow:0 0 8px #fff,0 0 24px #fff,0 0 54px rgba(255,255,255,.9),0 0 110px rgba(255,255,255,.5)}
+  0%,100%{
+    color:#fff;
+    text-shadow:0 0 4px #fff,0 0 12px rgba(255,255,255,.95),0 0 28px rgba(255,255,255,.7),0 0 64px rgba(255,255,255,.38)
+  }
+  50%{text-shadow:0 0 8px #fff,0 0 24px #fff,0 0 54px rgba(255,255,255,.9),0 0 110px rgba(255,255,255,.55)}
 }
 @keyframes cyanPulse{
-  0%,100%{color:#d8fff8;text-shadow:0 0 4px #fff,0 0 10px #90ffe8,0 0 22px #00ffc8,0 0 48px #00bfa0,0 0 90px #006860,0 0 180px rgba(0,80,60,.4)}
+  0%,100%{
+    color:#d8fff8;
+    text-shadow:0 0 4px #fff,0 0 10px #90ffe8,0 0 22px #00ffc8,0 0 48px #00bfa0,0 0 90px #006860,0 0 180px rgba(0,80,60,.4)
+  }
   50%{text-shadow:0 0 10px #fff,0 0 22px #b0fff0,0 0 44px #40ffe0,0 0 90px #00d0b0,0 0 180px #008878}
 }
 @keyframes purpPulse{
-  0%,100%{color:#eedcff;text-shadow:0 0 4px #fff,0 0 10px #cc90ff,0 0 22px #9c40ff,0 0 48px #6800d8,0 0 90px #3c0080}
+  0%,100%{
+    color:#eedcff;
+    text-shadow:0 0 4px #fff,0 0 10px #cc90ff,0 0 22px #9c40ff,0 0 48px #6800d8,0 0 90px #3c0080
+  }
   50%{text-shadow:0 0 8px #fff,0 0 20px #deb0ff,0 0 44px #bc60ff,0 0 90px #8820e8,0 0 160px #5800a8}
 }
 </style>
 </head>
 <body>
+
 <div class="bg"></div>
+<div class="overlay"></div>
+<div class="scan"></div>
 <canvas id="c"></canvas>
 
 <div id="hint">
@@ -133,11 +204,11 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
 
 <script>
 (function(){
-  /* ═══════════════════════════════
+  /* ══════════════════════════════════════
      PARTICLE ENGINE — identical to liberté
-  ═══════════════════════════════ */
-  var canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-  function rsz(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  ══════════════════════════════════════ */
+  var C=document.getElementById('c'),ctx=C.getContext('2d');
+  function rsz(){C.width=window.innerWidth;C.height=window.innerHeight;}
   rsz();window.addEventListener('resize',rsz);
 
   var HUES=[198,42,330];
@@ -158,74 +229,88 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
   function burst(x,y,hue,n){
     for(var i=0;i<n;i++){
       var a=Math.random()*Math.PI*2,s=Math.random()*8+2;
-      bursts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,r:Math.random()*3.2+.5,alpha:1,hue:hue,decay:Math.random()*.01+.011,grav:.14});
+      bursts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,
+        r:Math.random()*3.2+.5,alpha:1,hue:hue,
+        decay:Math.random()*.01+.011,grav:.14});
     }
   }
 
   function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0,0,C.width,C.height);
     var W=window.innerWidth,H=window.innerHeight;
     amb.forEach(function(p){
-      p.phase+=.015;p.x+=p.vx+Math.sin(p.phase)*.18;p.y+=p.vy;
+      p.phase+=.015;
+      p.x+=p.vx+Math.sin(p.phase)*.18;
+      p.y+=p.vy;
       if(p.y<-10){p.y=H+10;p.x=Math.random()*W;}
       if(p.x<-10||p.x>W+10){p.x=Math.random()*W;p.y=H+10;}
-      ctx.save();ctx.shadowBlur=10;ctx.shadowColor='hsl('+p.hue+',88%,70%)';
+      ctx.save();
+      ctx.shadowBlur=10;ctx.shadowColor='hsl('+p.hue+',88%,70%)';
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle='hsla('+p.hue+',88%,75%,'+p.alpha+')';ctx.fill();ctx.restore();
+      ctx.fillStyle='hsla('+p.hue+',88%,75%,'+p.alpha+')';
+      ctx.fill();ctx.restore();
     });
     bursts=bursts.filter(function(p){return p.alpha>.01;});
     bursts.forEach(function(p){
       p.x+=p.vx;p.y+=p.vy;p.vy+=p.grav;p.vx*=.968;p.alpha-=p.decay;p.r*=.983;
-      ctx.save();ctx.shadowBlur=20;ctx.shadowColor='hsl('+p.hue+',95%,65%)';
+      ctx.save();
+      ctx.shadowBlur=20;ctx.shadowColor='hsl('+p.hue+',95%,65%)';
       ctx.beginPath();ctx.arc(p.x,p.y,Math.max(.1,p.r),0,Math.PI*2);
-      ctx.fillStyle='hsla('+p.hue+',95%,80%,'+p.alpha+')';ctx.fill();ctx.restore();
+      ctx.fillStyle='hsla('+p.hue+',95%,80%,'+p.alpha+')';
+      ctx.fill();ctx.restore();
     });
     requestAnimationFrame(draw);
   }
   draw();
 
-  /* ═══════════════════════════════
-     FONT FIT — identical to liberté
-  ═══════════════════════════════ */
-  function fit(){
-    document.querySelectorAll('.neon').forEach(function(el){
-      el.style.fontSize='';
-      requestAnimationFrame(function(){
-        var mw=window.innerWidth*.88;
-        if(el.scrollWidth>mw){
-          var c=parseFloat(getComputedStyle(el).fontSize);
-          el.style.fontSize=(c*(mw/el.scrollWidth))+'px';
-        }
-      });
-    });
-  }
-  window.addEventListener('resize',fit);
-  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fit);}else{setTimeout(fit,300);}
+  /* ══════════════════════════════════════
+     ELEMENTS
+  ══════════════════════════════════════ */
+  var l1=document.getElementById('l1');
+  var l2=document.getElementById('l2');
+  var l3=document.getElementById('l3');
+  var els=[l1,l2,l3];
 
-  /* ═══════════════════════════════
-     SCENE DATA
-     4 scenes × 3 big lines = exactly like liberté
-  ═══════════════════════════════ */
+  /* ══════════════════════════════════════
+     SYNCHRONOUS FONT FIT
+     Must run BEFORE animation starts.
+     Uses direct measurement, no RAF delay.
+  ══════════════════════════════════════ */
+  function fitEl(el){
+    el.style.fontSize='';          /* reset to CSS default */
+    void el.offsetWidth;           /* force reflow */
+    var mw=window.innerWidth*0.88;
+    if(el.scrollWidth>mw){
+      var fs=parseFloat(window.getComputedStyle(el).fontSize);
+      el.style.fontSize=Math.floor(fs*(mw/el.scrollWidth))+'px';
+    }
+  }
+
+  window.addEventListener('resize',function(){els.forEach(fitEl);});
+
+  /* ══════════════════════════════════════
+     SCENES — 4 × 3 lines, liberté-style
+  ══════════════════════════════════════ */
   var SCENES=[
-    // ── Scene 1 ──
+    // ── 1 ──
     [
-      {t:'2 миллиона людей.',            a:'fromLeft',  h:198, lp:'neonFlicker', ld:9000},
-      {t:'Разные языки, страны, судьбы —', a:'fromTop',  h:42,  lp:'goldBreathe', ld:8000},
-      {t:'и все движутся в одну точку',   a:'fromRight', h:330, lp:'rosePulse',   ld:8500}
+      {t:'2 миллиона людей.',              a:'fromLeft',  h:198, lp:'neonFlicker',ld:9000},
+      {t:'Разные языки, страны, судьбы —', a:'fromTop',   h:42,  lp:'goldBreathe',ld:8000},
+      {t:'и все движутся в одну точку',    a:'fromRight', h:330, lp:'rosePulse',  ld:8500}
     ],
-    // ── Scene 2 ──
+    // ── 2 ──
     [
-      {t:'как данные в единую систему.',  a:'fromLeft',  h:198, lp:'neonFlicker', ld:9000},
-      {t:'Ни один алгоритм не объяснит — ', a:'fromTop', h:42,  lp:'goldBreathe', ld:8000},
-      {t:'только вера. ☝️',               a:'fromRight', h:330, lp:'rosePulse',   ld:8500}
+      {t:'как данные в единую систему.',   a:'fromLeft',  h:198, lp:'neonFlicker',ld:9000},
+      {t:'Ни один алгоритм не объяснит —', a:'fromTop',  h:42,  lp:'goldBreathe',ld:8000},
+      {t:'только вера. ☝️',                a:'fromRight', h:330, lp:'rosePulse',  ld:8500}
     ],
-    // ── Scene 3 ──
+    // ── 3 ──
     [
-      {t:'Это живой код Всевышнего,',     a:'fromLeft',  h:280, lp:'purpPulse',   ld:9000},
-      {t:'1400 лет без единого сбоя.',    a:'fromTop',   h:42,  lp:'goldBreathe', ld:8000},
-      {t:'Мы часть этой системы. ✊',      a:'fromRight', h:330, lp:'rosePulse',   ld:8500}
+      {t:'Это живой код Всевышнего,',       a:'fromLeft',  h:280, lp:'purpPulse',  ld:9000},
+      {t:'1400 лет без единого сбоя.',      a:'fromTop',   h:42,  lp:'goldBreathe',ld:8000},
+      {t:'Мы часть этой системы. ✊',        a:'fromRight', h:330, lp:'rosePulse',  ld:8500}
     ],
-    // ── Scene 4 — FINALE ──
+    // ── 4 FINALE ──
     [
       {t:'Курбан-байрам Мубарак, умма! 🕋🤲', a:'fromLeft',  h:60,  lp:'whitePulse', ld:9000},
       {t:'пусть Он примет от всех нас.',       a:'fromTop',   h:42,  lp:'goldBreathe',ld:8000},
@@ -234,15 +319,10 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
     ]
   ];
 
-  /* ═══════════════════════════════
-     ANIMATION ENGINE
-  ═══════════════════════════════ */
-  var l1=document.getElementById('l1');
-  var l2=document.getElementById('l2');
-  var l3=document.getElementById('l3');
-  var els=[l1,l2,l3];
-
-  var DUR=1100, GAP=1200, HOLD=2000, FADE=650;
+  /* ══════════════════════════════════════
+     ANIMATION ENGINE — same logic as liberté
+  ══════════════════════════════════════ */
+  var DUR=1100, GAP=1400, HOLD=2200, FADE=650;
 
   function cx(){return window.innerWidth/2;}
   function cy(){return window.innerHeight/2;}
@@ -251,7 +331,6 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
   function botY(){return cy()+window.innerHeight*.16;}
   var yFns=[topY,midY,botY];
 
-  /* Animate one line in */
   function animIn(el,sd,yFn,delay){
     setTimeout(function(){
       el.style.animation=sd.a+' '+DUR+'ms cubic-bezier(.22,1,.36,1) forwards';
@@ -259,88 +338,95 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
       setTimeout(function(){
         el.style.opacity='1';
         el.style.transform='none';
+        el.style.filter='none';
         el.style.animation=sd.lp+' '+sd.ld+'ms ease-in-out infinite';
       },DUR+80);
     },delay);
   }
 
-  /* Set up scene content & reset elements */
+  /* Load a scene: set text, reset styles, fit fonts */
   function loadScene(sc){
     els.forEach(function(el,i){
-      el.style.animation='none';
-      el.style.opacity='0';
-      el.style.transform='none';
-      el.style.filter='none';
-      el.style.fontSize='';
-      el.style.cursor='';
-      el.onclick=null;
+      /* Hard reset */
+      el.style.cssText='';
+      el.className='neon';
       el.textContent=sc[i].t;
+      el.style.opacity='0';
+      el.style.animation='none';
+      el.style.transform='translateZ(0)';
+      el.style.filter='none';
+      el.onclick=null;
+      el.style.cursor='default';
       if(sc[i].href){
-        el.style.cursor='pointer';
-        (function(href){el.onclick=function(){window.open(href,'_blank');};})(sc[i].href);
+        (function(href){
+          el.style.cursor='pointer';
+          el.onclick=function(){window.open(href,'_blank');};
+        })(sc[i].href);
       }
     });
-    /* force reflow so scrollWidth is accurate */
-    els[0].offsetHeight;
-    /* fit fonts */
-    els.forEach(function(el){
-      var mw=window.innerWidth*.88;
-      if(el.scrollWidth>mw){
-        var fs=parseFloat(getComputedStyle(el).fontSize);
-        el.style.fontSize=(fs*(mw/el.scrollWidth))+'px';
-      }
-    });
+    /* restore IDs for CSS font-size rules */
+    l1.id='l1';l2.id='l2';l3.id='l3';
+    /* force reflow, then fit synchronously */
+    void l1.offsetHeight;
+    els.forEach(fitEl);
   }
 
-  /* Fade all lines out */
   function fadeAll(cb){
     els.forEach(function(el){
       el.style.animation='fadeOut '+FADE+'ms ease forwards';
     });
-    setTimeout(cb,FADE+50);
+    setTimeout(cb,FADE+60);
   }
 
-  /* Play one scene */
-  function playScene(sc,isFinal){
-    loadScene(sc);
-    animIn(l1,sc[0],yFns[0],0);
-    animIn(l2,sc[1],yFns[1],GAP);
-    animIn(l3,sc[2],yFns[2],GAP*2);
-    if(!isFinal){
-      /* hold after all lines land, then fade */
-      var holdAt=GAP*2+DUR+80+HOLD;
-      setTimeout(function(){fadeAll(nextScene);},holdAt);
-    }
-  }
-
-  /* Scene runner */
   var sceneIdx=0;
-  function nextScene(){
+  function runNext(){
     if(sceneIdx>=SCENES.length)return;
+    var sc=SCENES[sceneIdx];
     var isFinal=(sceneIdx===SCENES.length-1);
-    playScene(SCENES[sceneIdx],isFinal);
     sceneIdx++;
+
+    loadScene(sc);
+
+    /* small delay so font-fit reflow is committed */
+    setTimeout(function(){
+      animIn(l1,sc[0],yFns[0],0);
+      animIn(l2,sc[1],yFns[1],GAP);
+      animIn(l3,sc[2],yFns[2],GAP*2);
+
+      if(!isFinal){
+        var holdAt=GAP*2+DUR+80+HOLD;
+        setTimeout(function(){fadeAll(runNext);},holdAt);
+      }
+    },60);
   }
 
-  /* ═══════════════════════════════
-     START — tap anywhere (identical to liberté)
-  ═══════════════════════════════ */
-  var done=false;
+  /* ══════════════════════════════════════
+     START — tap anywhere (same as liberté)
+  ══════════════════════════════════════ */
+  var started=false;
   var hint=document.getElementById('hint');
+
   function go(){
-    if(done)return;done=true;
+    if(started)return;started=true;
+    /* try fullscreen */
+    var el=document.documentElement;
+    var rq=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen;
+    if(rq)try{rq.call(el);}catch(e){}
     hint.style.opacity='0';
-    setTimeout(function(){hint.style.display='none';},500);
-    setTimeout(nextScene,100);
+    setTimeout(function(){hint.style.display='none';},520);
+    setTimeout(runNext,120);
   }
+
   document.addEventListener('click',go,{once:true});
   document.addEventListener('touchstart',go,{once:true,passive:true});
 
-  /* ═══════════════════════════════
+  /* ══════════════════════════════════════
      PWA
-  ═══════════════════════════════ */
+  ══════════════════════════════════════ */
   if('serviceWorker'in navigator){
-    window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    });
   }
 })();
 </script>
