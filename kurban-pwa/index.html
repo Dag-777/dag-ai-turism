@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<title>Курбан-байрам Мубарак</title>
+<style>
+@font-face{
+  font-family:'EX';font-style:normal;font-weight:300;font-display:block;
+  src:url('https://fonts.gstatic.com/s/exo2/v21/7cH1v4okm5zmbvwkAx_sfcEuiD8jvvKcPtq-rpvLpQ.woff2') format('woff2');
+  unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+}
+@font-face{
+  font-family:'EX';font-style:normal;font-weight:400;font-display:block;
+  src:url('https://fonts.gstatic.com/s/exo2/v21/7cH1v4okm5zmbvwkAx_sfcEuiD8jvvKcPtq-rpvLpQ.woff2') format('woff2');
+  unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+}
+@font-face{
+  font-family:'EX';font-style:normal;font-weight:600;font-display:block;
+  src:url('https://fonts.gstatic.com/s/exo2/v21/7cH1v4okm5zmbvwkAx_sfcEuiD8jvvKcPtq-rpvLpQ.woff2') format('woff2');
+  unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+}
+@font-face{
+  font-family:'OR';font-style:normal;font-weight:700;font-display:block;
+  src:url('https://fonts.gstatic.com/s/orbitron/v29/yMJRMIlzdpvBhQQL_Qq7dys.woff2') format('woff2');
+  unicode-range:U+0000-00FF;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{
+  width:100%;height:100%;
+  background:#000;
+  overflow:hidden;
+  touch-action:manipulation;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.004) 3px,rgba(255,255,255,.004) 4px);
+  pointer-events:none;z-index:3;
+}
+.bg{
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse 90% 70% at 50% 50%,#06020e 0%,#020108 45%,#000 100%);
+  z-index:0;
+}
+canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
+
+/* ── HINT / START ── */
+#hint{
+  position:fixed;inset:0;z-index:50;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:clamp(16px,5vw,32px);
+  transition:opacity .5s ease;
+}
+.htitle{
+  font-family:'EX','Helvetica Neue',sans-serif;
+  font-size:clamp(18px,5.5vw,48px);
+  font-weight:600;
+  letter-spacing:.04em;
+  text-align:center;
+  line-height:1.3;
+  color:#dff4ff;
+  text-shadow:0 0 6px #fff,0 0 18px #44c8ff,0 0 40px #009ee0,0 0 90px rgba(0,80,200,.5);
+  padding:0 8vw;
+}
+.hsub{
+  font-family:-apple-system,'Helvetica Neue',sans-serif;
+  font-size:clamp(9px,2.8vw,16px);
+  color:rgba(255,255,255,.28);
+  letter-spacing:.22em;
+  text-transform:uppercase;
+}
+.ring{
+  width:clamp(80px,24vw,110px);
+  height:clamp(80px,24vw,110px);
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;
+  animation:rp 2s ease-in-out infinite;
+  cursor:pointer;
+}
+.ring::after{
+  content:'▶';
+  font-size:clamp(26px,8vw,40px);
+  color:rgba(255,255,255,.48);
+  margin-left:5px;
+}
+@keyframes rp{
+  0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,255,255,.14)}
+  50%{transform:scale(1.1);box-shadow:0 0 0 24px rgba(255,255,255,0)}
+}
+
+/* ── CONTENT ── */
+.content{
+  position:fixed;inset:0;z-index:20;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:env(safe-area-inset-top,12px) 4vw env(safe-area-inset-bottom,12px);
+  gap:clamp(2px,.8vw,8px);
+}
+
+.neon{
+  font-family:'EX','Helvetica Neue',sans-serif;
+  opacity:0;display:block;
+  will-change:transform,opacity,filter;
+  white-space:nowrap;
+  transform:translateZ(0);-webkit-transform:translateZ(0);
+}
+
+/* Font sizes */
+.fhero{
+  font-family:'OR','EX','Impact',sans-serif;
+  font-size:clamp(22px,7.2vw,66px);
+  font-weight:700;letter-spacing:.06em;line-height:1.1;
+}
+.fbody{
+  font-size:clamp(10.5px,3.3vw,30px);
+  font-weight:300;letter-spacing:.022em;line-height:1.22;
+}
+.fitalic{
+  font-size:clamp(10px,3.1vw,28px);
+  font-weight:400;font-style:italic;letter-spacing:.018em;line-height:1.22;
+}
+.fgreet{
+  font-size:clamp(13px,4.2vw,38px);
+  font-weight:600;letter-spacing:.025em;line-height:1.22;
+}
+.flink{
+  font-family:'OR','EX','Impact',sans-serif;
+  font-size:clamp(16px,5.4vw,50px);
+  font-weight:700;letter-spacing:.07em;
+  text-decoration:none;display:block;
+}
+
+/* Colors */
+.cblue{color:#ecfaff;text-shadow:0 0 4px #fff,0 0 10px #d0f4ff,0 0 22px #44c8ff,0 0 48px #009ee0,0 0 90px #0068b8,0 0 160px rgba(0,75,195,.38)}
+.ccyan{color:#d8fff8;text-shadow:0 0 4px #fff,0 0 10px #90ffe8,0 0 20px #00ffc8,0 0 44px #00bfa0,0 0 80px #006860}
+.cgold{color:#fff9e0;text-shadow:0 0 4px #fff,0 0 10px #fff0a0,0 0 22px #ffc020,0 0 48px #de7c00,0 0 90px #9e4c00,0 0 150px rgba(165,58,0,.38)}
+.cpurp{color:#eedcff;text-shadow:0 0 4px #fff,0 0 10px #cc90ff,0 0 22px #9c40ff,0 0 48px #6800d8,0 0 88px #3c0080}
+.cpink{color:#fff0f6;text-shadow:0 0 4px #fff,0 0 10px #ffbad6,0 0 22px #ff509e,0 0 48px #de0668,0 0 90px #9e0046,0 0 150px rgba(162,0,63,.38)}
+.cwhite{color:#fff;text-shadow:0 0 4px #fff,0 0 12px rgba(255,255,255,.95),0 0 28px rgba(255,255,255,.7),0 0 64px rgba(255,255,255,.35)}
+
+.div{
+  width:50%;height:1px;opacity:0;
+  background:linear-gradient(90deg,transparent,rgba(0,210,255,.7),transparent);
+  margin:1px 0;
+}
+
+/* ── Entry animations (liberté-style с skewX) ── */
+@keyframes fromLeft{
+  0%  {opacity:0;transform:translateX(-130px) skewX(12deg) translateZ(0);filter:blur(6px)}
+  55% {opacity:1;transform:translateX(14px) skewX(-3deg) translateZ(0);filter:blur(0)}
+  75% {transform:translateX(-6px) skewX(1deg) translateZ(0)}
+  100%{opacity:1;transform:translateX(0) skewX(0) translateZ(0);filter:blur(0)}
+}
+@keyframes fromRight{
+  0%  {opacity:0;transform:translateX(130px) skewX(-12deg) translateZ(0);filter:blur(6px)}
+  55% {opacity:1;transform:translateX(-14px) skewX(3deg) translateZ(0);filter:blur(0)}
+  75% {transform:translateX(6px) skewX(-1deg) translateZ(0)}
+  100%{opacity:1;transform:translateX(0) skewX(0) translateZ(0);filter:blur(0)}
+}
+@keyframes fromTop{
+  0%  {opacity:0;transform:translateY(-110px) scale(.82) translateZ(0);filter:blur(5px)}
+  58% {opacity:1;transform:translateY(12px) scale(1.03) translateZ(0);filter:blur(0)}
+  78% {transform:translateY(-5px) scale(.99) translateZ(0)}
+  100%{opacity:1;transform:translateY(0) scale(1) translateZ(0);filter:blur(0)}
+}
+@keyframes fromBot{
+  0%  {opacity:0;transform:translateY(80px) scale(.88) translateZ(0);filter:blur(5px)}
+  58% {opacity:1;transform:translateY(-10px) scale(1.02) translateZ(0);filter:blur(0)}
+  78% {transform:translateY(4px) scale(.99) translateZ(0)}
+  100%{opacity:1;transform:translateY(0) scale(1) translateZ(0);filter:blur(0)}
+}
+@keyframes zoomIn{
+  0%  {opacity:0;transform:scale(.45) translateY(16px);filter:blur(16px)}
+  60% {opacity:1;transform:scale(1.06);filter:blur(0)}
+  80% {transform:scale(.97)}
+  100%{opacity:1;transform:scale(1)}
+}
+
+/* ── Breathe loops ── */
+@keyframes neonFlicker{
+  0%,14%,16%,18%,27%,49%,94%,100%{color:#ecfaff;text-shadow:0 0 4px #fff,0 0 10px #d0f4ff,0 0 22px #44c8ff,0 0 48px #009ee0,0 0 90px #0068b8,0 0 160px rgba(0,75,195,.38)}
+  15%,50%{color:rgba(236,250,255,.05);text-shadow:none}
+  17%{color:rgba(236,250,255,.38);text-shadow:0 0 4px rgba(68,200,255,.2)}
+}
+@keyframes goldBreathe{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #fff0a0,0 0 22px #ffc020,0 0 48px #de7c00,0 0 90px #9e4c00,0 0 150px rgba(165,58,0,.38)}
+  50%{text-shadow:0 0 8px #fff,0 0 18px #fffcc0,0 0 38px #ffd040,0 0 75px #e88e00,0 0 140px #be5e00,0 0 238px rgba(205,78,0,.55)}
+}
+@keyframes rosePulse{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #ffbad6,0 0 22px #ff509e,0 0 48px #de0668,0 0 90px #9e0046,0 0 150px rgba(162,0,63,.38)}
+  50%{text-shadow:0 0 9px #fff,0 0 18px #ffd4ea,0 0 42px #ff70b4,0 0 82px #e81876,0 0 148px #be005c,0 0 252px rgba(198,0,88,.55)}
+}
+@keyframes cyanPulse{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #90ffe8,0 0 20px #00ffc8,0 0 44px #00bfa0,0 0 80px #006860}
+  50%{text-shadow:0 0 8px #fff,0 0 20px #b0fff0,0 0 40px #40ffe0,0 0 80px #00d0b0,0 0 160px #008878}
+}
+@keyframes purpPulse{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #cc90ff,0 0 22px #9c40ff,0 0 48px #6800d8,0 0 88px #3c0080}
+  50%{text-shadow:0 0 8px #fff,0 0 20px #deb0ff,0 0 44px #bc60ff,0 0 90px #8820e8,0 0 160px #5800a8}
+}
+@keyframes whitePulse{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 12px rgba(255,255,255,.95),0 0 28px rgba(255,255,255,.7),0 0 64px rgba(255,255,255,.35)}
+  50%{text-shadow:0 0 8px #fff,0 0 24px #fff,0 0 54px rgba(255,255,255,.9),0 0 110px rgba(255,255,255,.55)}
+}
+@keyframes linkGlow{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #90ffe8,0 0 20px #00ffc8,0 0 44px #00bfa0,0 0 80px #006860,0 0 180px #003838}
+  50%{text-shadow:0 0 10px #fff,0 0 22px #b0fff0,0 0 48px #40ffe0,0 0 100px #00d0b0,0 0 200px #008878}
+}
+@keyframes divGlow{0%,100%{opacity:.35}50%{opacity:.8}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<canvas id="c"></canvas>
+
+<!-- TAP TO START -->
+<div id="hint">
+  <p class="htitle">Курбан-байрам<br>Мубарак</p>
+  <div class="ring" id="ring"></div>
+  <p class="hsub">нажми и записывай экран</p>
+</div>
+
+<!-- ANIMATION CONTENT -->
+<div class="content">
+  <span class="neon fhero  cblue"  id="l01">2 миллиона людей.</span>
+  <span class="neon fbody  ccyan"  id="l02">Разные языки, страны, судьбы —</span>
+  <span class="neon fbody  ccyan"  id="l03">и все движутся в одну точку,</span>
+  <span class="neon fbody  ccyan"  id="l04">как данные в единую систему.</span>
+  <div class="div" id="d1"></div>
+  <span class="neon fitalic cgold" id="l05">Ни один алгоритм в мире не объяснит эту силу —</span>
+  <span class="neon fbody  cgold"  id="l06">только вера. ☝️</span>
+  <div class="div" id="d2"></div>
+  <span class="neon fbody  cpurp"  id="l07">Это живой код Всевышнего,</span>
+  <span class="neon fbody  cpurp"  id="l08">запущенный 1400 лет назад</span>
+  <span class="neon fbody  cpurp"  id="l09">и работающий без единого сбоя —</span>
+  <span class="neon fbody  cpink"  id="l10">пока системы мира считают прибыль,</span>
+  <span class="neon fbody  cpink"  id="l11">здесь считают шаги к Аллаху.</span>
+  <div class="div" id="d3"></div>
+  <span class="neon fbody  cgold"  id="l12">Мы часть этой системы —</span>
+  <span class="neon fbody  cgold"  id="l13">и это не случайность.</span>
+  <div class="div" id="d4"></div>
+  <span class="neon fgreet cwhite" id="l14">Курбан-байрам Мубарак, умма — 🕋🤲</span>
+  <span class="neon fgreet cgold"  id="l15">пусть Он примет от всех нас.</span>
+  <a class="neon flink   ccyan"   id="l16"
+     href="https://t.me/islam_dag_ai" target="_blank" rel="noopener">@islam_dag_ai</a>
+</div>
+
+<script>
+(function(){
+  /* ── Canvas particles (liberté engine) ── */
+  var canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+  function rsz(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  rsz();window.addEventListener('resize',rsz);
+
+  var HUES=[198,42,330,280,165,130];
+  var amb=Array.from({length:72},function(_,i){
+    return{x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,
+      r:Math.random()*1.6+.18,vx:(Math.random()-.5)*.2,vy:-(Math.random()*.25+.05),
+      alpha:Math.random()*.32+.05,hue:HUES[i%HUES.length],phase:Math.random()*Math.PI*2};
+  });
+  var bursts=[];
+  function burst(x,y,hue,n){
+    for(var i=0;i<n;i++){
+      var a=Math.random()*Math.PI*2,s=Math.random()*9+2;
+      bursts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,
+        r:Math.random()*3.5+.5,alpha:1,hue:hue,decay:Math.random()*.011+.01,grav:.15});
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    var W=window.innerWidth,H=window.innerHeight;
+    amb.forEach(function(p){
+      p.phase+=.015;p.x+=p.vx+Math.sin(p.phase)*.2;p.y+=p.vy;
+      if(p.y<-10){p.y=H+10;p.x=Math.random()*W;}
+      if(p.x<-10||p.x>W+10){p.x=Math.random()*W;p.y=H+10;}
+      ctx.save();ctx.shadowBlur=11;ctx.shadowColor='hsl('+p.hue+',88%,70%)';
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='hsla('+p.hue+',88%,75%,'+p.alpha+')';ctx.fill();ctx.restore();
+    });
+    bursts=bursts.filter(function(p){return p.alpha>.01;});
+    bursts.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.vy+=p.grav;p.vx*=.968;p.alpha-=p.decay;p.r*=.983;
+      ctx.save();ctx.shadowBlur=22;ctx.shadowColor='hsl('+p.hue+',95%,65%)';
+      ctx.beginPath();ctx.arc(p.x,p.y,Math.max(.1,p.r),0,Math.PI*2);
+      ctx.fillStyle='hsla('+p.hue+',95%,80%,'+p.alpha+')';ctx.fill();ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  /* ── Font fit ── */
+  function fit(){
+    document.querySelectorAll('.neon').forEach(function(el){
+      el.style.fontSize='';
+      requestAnimationFrame(function(){
+        var mw=window.innerWidth*.9;
+        if(el.scrollWidth>mw){
+          var fs=parseFloat(getComputedStyle(el).fontSize);
+          el.style.fontSize=(fs*(mw/el.scrollWidth))+'px';
+        }
+      });
+    });
+  }
+  window.addEventListener('resize',fit);
+
+  /* ── Line animator (identical to liberté) ── */
+  var DUR=920,GAP=650;
+  function cx(){return window.innerWidth/2;}
+
+  function line(id,anim,hue,loop,ldur,delay){
+    setTimeout(function(){
+      var el=document.getElementById(id)||document.querySelector('a#'+id);
+      el.style.animation=anim+' '+DUR+'ms cubic-bezier(.22,1,.36,1) forwards';
+      setTimeout(function(){
+        var r=el.getBoundingClientRect();
+        burst(r.left+r.width*.5,r.top+r.height*.5,hue,80);
+      },Math.round(DUR*.62));
+      setTimeout(function(){
+        el.style.opacity='1';el.style.transform='none';
+        el.style.filter='none';
+        el.style.animation=loop+' '+ldur+'ms ease-in-out infinite';
+      },DUR+75);
+    },delay);
+  }
+  function showDiv(id,delay){
+    setTimeout(function(){
+      var el=document.getElementById(id);
+      el.style.transition='opacity 600ms';el.style.opacity='1';
+      setTimeout(function(){el.style.animation='divGlow 3s ease-in-out infinite';},600);
+    },delay);
+  }
+
+  /* ── Start on tap/click ── */
+  var done=false;
+  var hint=document.getElementById('hint');
+
+  function go(){
+    if(done)return;done=true;
+    hint.style.opacity='0';
+    setTimeout(function(){hint.style.display='none';},500);
+    setTimeout(function(){
+      fit();
+      var G=GAP,S=380;
+      var t=0;
+      line('l01','fromLeft',  198,'neonFlicker', 9000,t); t+=G;
+      line('l02','fromRight', 165,'cyanPulse',   8000,t); t+=G;
+      line('l03','fromLeft',  165,'cyanPulse',   8200,t); t+=G;
+      line('l04','fromRight', 165,'cyanPulse',   7800,t); t+=S;
+      showDiv('d1',t);                                     t+=S;
+      line('l05','fromLeft',   42,'goldBreathe', 8500,t); t+=G;
+      line('l06','fromRight',  42,'goldBreathe', 7200,t); t+=S;
+      showDiv('d2',t);                                     t+=S;
+      line('l07','fromLeft',  280,'purpPulse',   8200,t); t+=G;
+      line('l08','fromTop',   280,'purpPulse',   8000,t); t+=G;
+      line('l09','fromRight', 280,'purpPulse',   8400,t); t+=G;
+      line('l10','fromLeft',  330,'rosePulse',   7800,t); t+=G;
+      line('l11','fromRight', 330,'rosePulse',   8000,t); t+=S;
+      showDiv('d3',t);                                     t+=S;
+      line('l12','fromLeft',   42,'goldBreathe', 7800,t); t+=G;
+      line('l13','fromRight',  42,'goldBreathe', 7500,t); t+=S;
+      showDiv('d4',t);                                     t+=S;
+      line('l14','zoomIn',     60,'whitePulse',  8000,t); t+=G;
+      line('l15','fromBot',    42,'goldBreathe', 7500,t); t+=G;
+      line('l16','zoomIn',    165,'linkGlow',    3500,t);
+    },100);
+  }
+
+  document.getElementById('ring').addEventListener('click',go);
+  document.getElementById('ring').addEventListener('touchstart',go,{passive:true});
+  document.getElementById('hint').addEventListener('click',go);
+  document.getElementById('hint').addEventListener('touchstart',go,{passive:true});
+
+  /* ── PWA ── */
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    });
+  }
+
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fit);}else{setTimeout(fit,400);}
+})();
+</script>
+</body>
+</html>
