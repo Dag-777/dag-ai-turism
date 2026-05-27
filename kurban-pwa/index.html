@@ -33,6 +33,7 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
 @keyframes scOut{0%{opacity:1}100%{opacity:0;transform:scale(.93) translateZ(0)}}
 @keyframes breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5)}}
 @keyframes flicker{0%,13%,15%,17%,26%,48%,93%,100%{filter:brightness(1)}14%,49%{filter:brightness(0.05)}16%{filter:brightness(0.38)}}
+@keyframes neonBlink{0%,4%,6%,8%,18%,20%,45%,47%,94%,100%{filter:brightness(1.2)}5%,7%{filter:brightness(0.03)}19%{filter:brightness(0.08)}46%{filter:brightness(0.05)}}
 </style>
 </head>
 <body>
@@ -99,7 +100,7 @@ var SC=[
    {t:'Мы — часть системы.',     a:'fromRight',g:'pink',lp:'breathe',ld:8500,h:330}],
   [{t:'Курбан-байрам Мубарак!',      a:'fromLeft', g:'white',lp:'breathe',ld:9000,h:60},
    {t:'пусть Он примет нас. 🕋🤲',   a:'fromTop',  g:'gold', lp:'breathe',ld:7500,h:42},
-   {t:'@islam_dag_ai',               a:'fromRight',g:'cyan', lp:'breathe',ld:3500,h:165,href:'https://t.me/islam_dag_ai'}]
+   {t:'@islam_dag_ai',               a:'fromRight',g:'cyan', lp:'neonBlink',ld:2400,h:165,href:'https://t.me/islam_dag_ai'}]
 ];
 var DUR=1100,GAP=1400,HOLD=2000,FADE=700;
 function cx(){return innerWidth/2;}function cy(){return innerHeight/2;}
