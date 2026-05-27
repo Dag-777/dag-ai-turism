@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
+<title>Курбан-байрам Мубарак</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;background:#000;overflow-x:hidden}
+body{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;
+  min-height:100vh;
+}
+
+/* Scanline CRT overlay */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.0035) 3px,rgba(255,255,255,.0035) 4px);
+  pointer-events:none;z-index:2
+}
+
+.bg{
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse 110% 80% at 50% 40%,#07001a 0%,#030009 40%,#000 100%);
+  z-index:0
+}
+
+canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
+
+.content{
+  position:relative;z-index:20;
+  display:flex;flex-direction:column;
+  align-items:center;text-align:center;
+  width:100%;max-width:960px;
+  padding:10vw 5vw 12vw;
+  gap:clamp(5px,1.8vw,16px);
+}
+
+/* Neon text base */
+.neon{
+  display:block;opacity:0;
+  will-change:transform,opacity,filter;
+  white-space:nowrap;
+}
+
+/* Font variants */
+.fhero{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(24px,7.5vw,68px);
+  font-weight:900;letter-spacing:.06em;
+}
+.fbody{
+  font-family:'Exo 2',sans-serif;
+  font-size:clamp(13px,3.9vw,36px);
+  font-weight:300;letter-spacing:.025em;
+}
+.fitalic{
+  font-family:'Exo 2',sans-serif;
+  font-size:clamp(13px,3.9vw,36px);
+  font-weight:400;font-style:italic;letter-spacing:.02em;
+}
+.fgreet{
+  font-family:'Exo 2',sans-serif;
+  font-size:clamp(15px,4.8vw,44px);
+  font-weight:600;letter-spacing:.03em;
+}
+.flink{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(18px,6vw,56px);
+  font-weight:700;letter-spacing:.07em;
+  text-decoration:none;
+}
+
+/* Neon color palettes */
+.cblue{
+  color:#dff4ff;
+  text-shadow:0 0 4px #fff,0 0 10px #b0e8ff,0 0 22px #44c8ff,0 0 50px #0099e0,0 0 90px #004db8,0 0 160px rgba(0,60,180,.35);
+}
+.ccyan{
+  color:#d8fff8;
+  text-shadow:0 0 4px #fff,0 0 10px #8cffec,0 0 22px #00ffc8,0 0 50px #00bfa0,0 0 90px #007060;
+}
+.cgold{
+  color:#fff7d0;
+  text-shadow:0 0 4px #fff,0 0 10px #ffe090,0 0 22px #ffc020,0 0 50px #de7800,0 0 90px #9e4800;
+}
+.cpurp{
+  color:#eedcff;
+  text-shadow:0 0 4px #fff,0 0 10px #d090ff,0 0 22px #a040ff,0 0 50px #7000d8,0 0 90px #40008a;
+}
+.cpink{
+  color:#ffecf4;
+  text-shadow:0 0 4px #fff,0 0 10px #ffaacf,0 0 22px #ff4090,0 0 50px #d80060,0 0 90px #940040;
+}
+.cwhite{
+  color:#ffffff;
+  text-shadow:0 0 4px #fff,0 0 12px rgba(255,255,255,.9),0 0 28px rgba(255,255,255,.6),0 0 60px rgba(255,255,255,.3);
+}
+.cgreen{
+  color:#d0ffe0;
+  text-shadow:0 0 4px #fff,0 0 10px #80ffa0,0 0 22px #00e040,0 0 50px #00a030,0 0 90px #005820;
+}
+
+/* Dividers */
+.div{
+  width:50%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,200,255,.7),transparent);
+  opacity:0;margin:2px 0;
+}
+
+/* Entry animations */
+@keyframes fromLeft{
+  from{opacity:0;transform:translateX(-100px) scale(.9);filter:blur(10px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes fromRight{
+  from{opacity:0;transform:translateX(100px) scale(.9);filter:blur(10px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes fromTop{
+  from{opacity:0;transform:translateY(-60px) scale(.92);filter:blur(8px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes fromBottom{
+  from{opacity:0;transform:translateY(60px) scale(.92);filter:blur(8px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes zoomIn{
+  from{opacity:0;transform:scale(.5) translateY(20px);filter:blur(14px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+
+/* Loop breathe animations */
+@keyframes bBlue{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #b0e8ff,0 0 22px #44c8ff,0 0 50px #0099e0,0 0 90px #004db8}
+  50%{text-shadow:0 0 8px #fff,0 0 20px #d0f4ff,0 0 40px #70d8ff,0 0 80px #00b0e8,0 0 150px #0060c8}
+}
+@keyframes bGold{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #ffe090,0 0 22px #ffc020,0 0 50px #de7800,0 0 90px #9e4800}
+  50%{text-shadow:0 0 8px #fff,0 0 20px #fff8b0,0 0 40px #ffd040,0 0 80px #e89000,0 0 150px #be6000}
+}
+@keyframes bPink{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #ffaacf,0 0 22px #ff4090,0 0 50px #d80060,0 0 90px #940040}
+  50%{text-shadow:0 0 8px #fff,0 0 20px #ffd0e8,0 0 44px #ff60a8,0 0 88px #e81070,0 0 160px #be0050}
+}
+@keyframes bPurp{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #d090ff,0 0 22px #a040ff,0 0 50px #7000d8,0 0 90px #40008a}
+  50%{text-shadow:0 0 8px #fff,0 0 20px #e0b0ff,0 0 44px #c060ff,0 0 88px #9020e8,0 0 160px #6000aa}
+}
+@keyframes bCyan{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #8cffec,0 0 22px #00ffc8,0 0 50px #00bfa0,0 0 90px #007060}
+  50%{text-shadow:0 0 8px #fff,0 0 20px #b0fff8,0 0 44px #40ffe0,0 0 88px #00d0b0,0 0 160px #008870}
+}
+@keyframes bWhite{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 12px rgba(255,255,255,.9),0 0 28px rgba(255,255,255,.6),0 0 60px rgba(255,255,255,.3)}
+  50%{text-shadow:0 0 8px #fff,0 0 22px rgba(255,255,255,1),0 0 50px rgba(255,255,255,.8),0 0 100px rgba(255,255,255,.5)}
+}
+@keyframes bLink{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #8cffec,0 0 22px #00ffc8,0 0 50px #00bfa0,0 0 90px #007060,0 0 180px #003a38}
+  50%{text-shadow:0 0 10px #fff,0 0 22px #b0fff8,0 0 48px #40ffe0,0 0 100px #00d0b0,0 0 200px #008870}
+}
+@keyframes divFade{
+  0%,100%{opacity:.4}50%{opacity:.9}
+}
+@keyframes flicker{
+  0%,15%,17%,25%,100%{opacity:1}16%{opacity:.2}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<canvas id="c"></canvas>
+
+<div class="content">
+  <span class="neon fhero cblue"    id="l01">2 миллиона людей.</span>
+
+  <span class="neon fbody ccyan"    id="l02">Разные языки, страны, судьбы —</span>
+  <span class="neon fbody ccyan"    id="l03">и все движутся в одну точку,</span>
+  <span class="neon fbody ccyan"    id="l04">как данные в единую систему.</span>
+
+  <div class="div" id="d1"></div>
+
+  <span class="neon fitalic cgold"  id="l05">Ни один алгоритм в мире не объяснит эту силу —</span>
+  <span class="neon fbody cgold"    id="l06">только вера. ☝️</span>
+
+  <div class="div" id="d2"></div>
+
+  <span class="neon fbody cpurp"    id="l07">Это живой код Всевышнего,</span>
+  <span class="neon fbody cpurp"    id="l08">запущенный 1400 лет назад</span>
+  <span class="neon fbody cpurp"    id="l09">и работающий без единого сбоя —</span>
+  <span class="neon fbody cpink"    id="l10">пока системы мира считают прибыль,</span>
+  <span class="neon fbody cpink"    id="l11">здесь считают шаги к Аллаху.</span>
+
+  <div class="div" id="d3"></div>
+
+  <span class="neon fbody cgold"    id="l12">Мы часть этой системы —</span>
+  <span class="neon fbody cgold"    id="l13">и это не случайность.</span>
+
+  <div class="div" id="d4"></div>
+
+  <span class="neon fgreet cwhite"  id="l14">Курбан-байрам Мубарак, умма —</span>
+  <span class="neon fgreet cgold"   id="l15">пусть Он примет от всех нас. 🕋🤲</span>
+
+  <a class="flink cblue neon" id="l16" href="https://t.me/islam_dag_ai" target="_blank" rel="noopener">@islam_dag_ai</a>
+</div>
+
+<script>
+(function(){
+  /* ─── Canvas particles ─── */
+  var C=document.getElementById('c'),ctx=C.getContext('2d');
+  function rsz(){C.width=innerWidth;C.height=innerHeight;}
+  rsz();addEventListener('resize',rsz);
+
+  var HUES=[198,165,280,42,330,130,220];
+  var amb=Array.from({length:90},function(_,i){
+    return{
+      x:Math.random()*innerWidth,
+      y:Math.random()*innerHeight,
+      r:Math.random()*1.8+.15,
+      vx:(Math.random()-.5)*.22,
+      vy:-(Math.random()*.28+.04),
+      alpha:Math.random()*.38+.04,
+      hue:HUES[i%HUES.length],
+      phase:Math.random()*Math.PI*2
+    };
+  });
+  var bst=[];
+
+  function burst(x,y,hue,n){
+    for(var i=0;i<n;i++){
+      var a=Math.random()*Math.PI*2,s=Math.random()*11+2;
+      bst.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,r:Math.random()*4.5+.5,alpha:1,hue:hue,decay:Math.random()*.013+.009,grav:.18});
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,C.width,C.height);
+    var W=innerWidth,H=innerHeight;
+    amb.forEach(function(p){
+      p.phase+=.014;
+      p.x+=p.vx+Math.sin(p.phase)*.22;
+      p.y+=p.vy;
+      if(p.y<-10){p.y=H+10;p.x=Math.random()*W;}
+      if(p.x<-10||p.x>W+10){p.x=Math.random()*W;p.y=H+10;}
+      ctx.save();
+      ctx.shadowBlur=14;ctx.shadowColor='hsl('+p.hue+',90%,68%)';
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='hsla('+p.hue+',90%,76%,'+p.alpha+')';
+      ctx.fill();ctx.restore();
+    });
+    bst=bst.filter(function(p){return p.alpha>.01;});
+    bst.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.vy+=p.grav;p.vx*=.968;p.alpha-=p.decay;p.r*=.984;
+      ctx.save();
+      ctx.shadowBlur=24;ctx.shadowColor='hsl('+p.hue+',98%,65%)';
+      ctx.beginPath();ctx.arc(p.x,p.y,Math.max(.1,p.r),0,Math.PI*2);
+      ctx.fillStyle='hsla('+p.hue+',98%,82%,'+p.alpha+')';
+      ctx.fill();ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  /* ─── Auto font-fit ─── */
+  function fit(){
+    document.querySelectorAll('.neon').forEach(function(el){
+      el.style.fontSize='';
+      requestAnimationFrame(function(){
+        var mw=innerWidth*.94;
+        if(el.scrollWidth>mw){
+          var fs=parseFloat(getComputedStyle(el).fontSize);
+          el.style.fontSize=(fs*(mw/el.scrollWidth))+'px';
+        }
+      });
+    });
+  }
+  addEventListener('resize',fit);
+
+  /* ─── Animation engine ─── */
+  var DUR=760;
+
+  function animLine(id,enter,hue,loop,ldur,t){
+    setTimeout(function(){
+      var el=document.getElementById(id);
+      el.style.animation=enter+' '+DUR+'ms cubic-bezier(.2,1,.3,1) forwards';
+      setTimeout(function(){
+        var r=el.getBoundingClientRect();
+        burst(r.left+r.width*.5,r.top+r.height*.5,hue,65);
+      },Math.round(DUR*.64));
+      setTimeout(function(){
+        el.style.opacity='1';
+        el.style.transform='none';
+        el.style.filter='none';
+        el.style.animation=loop+' '+ldur+'ms ease-in-out infinite';
+      },DUR+70);
+    },t);
+  }
+
+  function animDiv(id,t){
+    setTimeout(function(){
+      var el=document.getElementById(id);
+      el.style.transition='opacity 700ms';
+      el.style.opacity='1';
+      setTimeout(function(){el.style.animation='divFade 3200ms ease-in-out infinite';},700);
+    },t);
+  }
+
+  /* ─── Sequence (total ~15 s) ─── */
+  var G=780; // gap between lines ms
+  var GS=420; // short gap
+  var t=280;
+
+  animLine('l01','fromLeft',   198,'bBlue',  8500,t); t+=G;
+  animLine('l02','fromRight',  165,'bCyan',  8000,t); t+=G;
+  animLine('l03','fromLeft',   165,'bCyan',  8200,t); t+=G;
+  animLine('l04','fromRight',  165,'bCyan',  7800,t); t+=GS;
+  animDiv('d1',t);                                     t+=GS;
+  animLine('l05','fromLeft',    42,'bGold',  8500,t); t+=G;
+  animLine('l06','fromRight',   42,'bGold',  7000,t); t+=GS;
+  animDiv('d2',t);                                     t+=GS;
+  animLine('l07','fromLeft',   280,'bPurp',  8200,t); t+=G;
+  animLine('l08','fromTop',    280,'bPurp',  8000,t); t+=G;
+  animLine('l09','fromRight',  280,'bPurp',  8400,t); t+=G;
+  animLine('l10','fromLeft',   330,'bPink',  7800,t); t+=G;
+  animLine('l11','fromRight',  330,'bPink',  8000,t); t+=GS;
+  animDiv('d3',t);                                     t+=GS;
+  animLine('l12','fromLeft',    42,'bGold',  7800,t); t+=G;
+  animLine('l13','fromRight',   42,'bGold',  7500,t); t+=GS;
+  animDiv('d4',t);                                     t+=GS;
+  animLine('l14','zoomIn',      60,'bWhite', 8000,t); t+=G;
+  animLine('l15','fromBottom',  42,'bGold',  7500,t); t+=G;
+  animLine('l16','zoomIn',     165,'bLink',  3500,t);
+
+  /* ─── Boot ─── */
+  if(document.fonts&&document.fonts.ready){
+    document.fonts.ready.then(fit);
+  }else{
+    setTimeout(fit,400);
+  }
+})();
+</script>
+</body>
+</html>

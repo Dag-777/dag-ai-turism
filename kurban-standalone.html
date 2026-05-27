@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<title>Курбан-байрам Мубарак</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html,body{
+  width:100%;height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family:'Exo 2','Roboto','Helvetica Neue',sans-serif;
+}
+
+/* CRT scanline */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 3px,
+    rgba(255,255,255,.0032) 3px,rgba(255,255,255,.0032) 4px
+  );
+  pointer-events:none;z-index:3;
+}
+
+/* Deep space background */
+.bg{
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse 120% 90% at 50% 35%,
+    #08001f 0%,#040012 35%,#010008 65%,#000 100%);
+  z-index:0;
+}
+
+canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
+
+/* ══ SPLASH / START SCREEN ══ */
+#splash{
+  position:fixed;inset:0;z-index:100;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:32px;
+  background:radial-gradient(ellipse 100% 80% at 50% 50%,#0a001e,#000);
+  transition:opacity .8s ease;
+}
+#splash.hide{opacity:0;pointer-events:none}
+
+.splash-title{
+  font-family:'Russo One','Impact',sans-serif;
+  font-size:clamp(20px,6vw,52px);
+  letter-spacing:.06em;
+  text-align:center;
+  line-height:1.3;
+  color:#dff4ff;
+  text-shadow:0 0 8px #fff,0 0 20px #44c8ff,0 0 48px #009ee0,0 0 100px rgba(0,80,200,.5);
+  padding:0 8vw;
+}
+
+.splash-sub{
+  font-size:clamp(12px,3.5vw,22px);
+  color:rgba(0,200,255,.55);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.btn-start{
+  position:relative;
+  width:clamp(130px,38vw,200px);
+  height:clamp(130px,38vw,200px);
+  border-radius:50%;
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  outline:none;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-appearance:none;
+}
+.btn-ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid rgba(0,212,255,.5);
+  animation:ringPulse 2s ease-in-out infinite;
+}
+.btn-ring2{
+  position:absolute;inset:-10px;border-radius:50%;
+  border:1px solid rgba(0,212,255,.2);
+  animation:ringPulse 2s ease-in-out infinite .4s;
+}
+.btn-ring3{
+  position:absolute;inset:-22px;border-radius:50%;
+  border:1px solid rgba(0,212,255,.1);
+  animation:ringPulse 2s ease-in-out infinite .8s;
+}
+.btn-inner{
+  width:clamp(110px,32vw,170px);
+  height:clamp(110px,32vw,170px);
+  border-radius:50%;
+  background:radial-gradient(circle,#0a1a3a 0%,#040e22 60%,#020810 100%);
+  border:1.5px solid rgba(0,212,255,.6);
+  box-shadow:0 0 20px rgba(0,150,220,.4),inset 0 0 20px rgba(0,100,180,.15);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:6px;
+  transition:box-shadow .15s;
+}
+.btn-start:active .btn-inner{
+  box-shadow:0 0 40px rgba(0,200,255,.8),inset 0 0 30px rgba(0,150,220,.3);
+}
+.btn-play{
+  font-size:clamp(28px,9vw,52px);
+  filter:drop-shadow(0 0 8px #00c8ff) drop-shadow(0 0 20px #0090d0);
+}
+.btn-label{
+  font-family:'Russo One','Impact',sans-serif;
+  font-size:clamp(10px,3vw,16px);
+  letter-spacing:.14em;
+  color:#00d4ff;
+  text-shadow:0 0 6px #00c8ff,0 0 14px #0090d0;
+}
+
+@keyframes ringPulse{
+  0%,100%{transform:scale(1);opacity:.6}
+  50%{transform:scale(1.08);opacity:1}
+}
+
+/* ══ CONTENT ══ */
+#wrap{
+  position:fixed;inset:0;z-index:20;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:env(safe-area-inset-top,0px) 5vw env(safe-area-inset-bottom,0px);
+  overflow:hidden;
+}
+
+.content{
+  display:flex;flex-direction:column;
+  align-items:center;text-align:center;
+  width:100%;gap:clamp(3px,1.2vw,11px);
+}
+
+/* Text lines */
+.neon{
+  display:block;opacity:0;
+  will-change:transform,opacity,filter;
+  white-space:nowrap;line-height:1.22;
+}
+
+/* Font roles */
+.fhero{
+  font-family:'Russo One','Impact',sans-serif;
+  font-size:clamp(22px,7vw,64px);
+  letter-spacing:.05em;
+}
+.fbody{
+  font-size:clamp(12px,3.6vw,33px);
+  font-weight:300;letter-spacing:.022em;
+}
+.fitalic{
+  font-size:clamp(11px,3.4vw,30px);
+  font-weight:400;font-style:italic;letter-spacing:.018em;
+}
+.fgreet{
+  font-size:clamp(14px,4.5vw,40px);
+  font-weight:600;letter-spacing:.025em;
+}
+.flink{
+  font-family:'Russo One','Impact',sans-serif;
+  font-size:clamp(16px,5.5vw,50px);
+  letter-spacing:.07em;
+  text-decoration:none;
+  display:block;
+}
+
+/* Color themes */
+.cblue{color:#dff4ff;text-shadow:0 0 4px #fff,0 0 10px #b0e8ff,0 0 22px #44c8ff,0 0 50px #009ee0,0 0 90px #004db8}
+.ccyan{color:#d8fff8;text-shadow:0 0 4px #fff,0 0 10px #90ffe8,0 0 22px #00ffc8,0 0 50px #00bfa0,0 0 88px #006860}
+.cgold{color:#fff6c0;text-shadow:0 0 4px #fff,0 0 10px #ffe090,0 0 22px #ffc020,0 0 50px #de7800,0 0 90px #9e4800}
+.cpurp{color:#eedcff;text-shadow:0 0 4px #fff,0 0 10px #cc90ff,0 0 22px #9c40ff,0 0 50px #6800d8,0 0 88px #3c0080}
+.cpink{color:#ffecf4;text-shadow:0 0 4px #fff,0 0 10px #ffaacc,0 0 22px #ff4090,0 0 50px #d60060,0 0 88px #920040}
+.cwhite{color:#fff;text-shadow:0 0 4px #fff,0 0 14px rgba(255,255,255,.95),0 0 32px rgba(255,255,255,.65),0 0 70px rgba(255,255,255,.3)}
+.cgreen{color:#ccffe0;text-shadow:0 0 4px #fff,0 0 10px #80ffa0,0 0 22px #00e040,0 0 50px #00a030,0 0 88px #005820}
+
+.div{
+  width:52%;height:1px;margin:1px 0;opacity:0;
+  background:linear-gradient(90deg,transparent,rgba(0,210,255,.65),transparent);
+}
+
+/* ── Entry keyframes ── */
+@keyframes fromLeft{
+  from{opacity:0;transform:translateX(-110px) scale(.88);filter:blur(12px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes fromRight{
+  from{opacity:0;transform:translateX(110px) scale(.88);filter:blur(12px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes fromTop{
+  from{opacity:0;transform:translateY(-70px) scale(.9);filter:blur(8px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes fromBot{
+  from{opacity:0;transform:translateY(70px) scale(.9);filter:blur(8px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+@keyframes zoomIn{
+  from{opacity:0;transform:scale(.45) translateY(18px);filter:blur(16px)}
+  to{opacity:1;transform:none;filter:blur(0)}
+}
+
+/* ── Breath loops ── */
+@keyframes bBlue{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #b0e8ff,0 0 22px #44c8ff,0 0 50px #009ee0,0 0 90px #004db8}
+  50%{text-shadow:0 0 8px #fff,0 0 22px #d0f4ff,0 0 42px #70d8ff,0 0 85px #00b0e8,0 0 160px #005cc8}
+}
+@keyframes bCyan{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #90ffe8,0 0 22px #00ffc8,0 0 50px #00bfa0,0 0 88px #006860}
+  50%{text-shadow:0 0 8px #fff,0 0 22px #b0fff0,0 0 44px #40ffe0,0 0 90px #00d0b0,0 0 160px #008878}
+}
+@keyframes bGold{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #ffe090,0 0 22px #ffc020,0 0 50px #de7800,0 0 90px #9e4800}
+  50%{text-shadow:0 0 8px #fff,0 0 22px #fff8a0,0 0 44px #ffd040,0 0 90px #e89000,0 0 160px #be6000}
+}
+@keyframes bPurp{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #cc90ff,0 0 22px #9c40ff,0 0 50px #6800d8,0 0 88px #3c0080}
+  50%{text-shadow:0 0 8px #fff,0 0 22px #e0b0ff,0 0 46px #b860ff,0 0 95px #8820e8,0 0 170px #5c00a8}
+}
+@keyframes bPink{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #ffaacc,0 0 22px #ff4090,0 0 50px #d60060,0 0 88px #920040}
+  50%{text-shadow:0 0 8px #fff,0 0 22px #ffd0e8,0 0 46px #ff68a8,0 0 96px #e81870,0 0 170px #bc0052}
+}
+@keyframes bWhite{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 14px rgba(255,255,255,.95),0 0 32px rgba(255,255,255,.65),0 0 70px rgba(255,255,255,.3)}
+  50%{text-shadow:0 0 8px #fff,0 0 26px #fff,0 0 60px rgba(255,255,255,.85),0 0 120px rgba(255,255,255,.5)}
+}
+@keyframes bLink{
+  0%,100%{text-shadow:0 0 4px #fff,0 0 10px #90ffe8,0 0 22px #00ffc8,0 0 50px #00bfa0,0 0 88px #006860,0 0 180px #003838}
+  50%{text-shadow:0 0 10px #fff,0 0 24px #b0fff0,0 0 50px #40ffe0,0 0 105px #00d0b0,0 0 200px #008878}
+}
+@keyframes divPulse{0%,100%{opacity:.38}50%{opacity:.85}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<canvas id="c"></canvas>
+
+<!-- ══ СТАРТ ЭКРАН ══ -->
+<div id="splash">
+  <p class="splash-sub">DAG · AI · UMMA</p>
+  <p class="splash-title">Курбан-байрам<br>Мубарак</p>
+  <button class="btn-start" id="btnStart" aria-label="Запустить анимацию">
+    <div class="btn-ring"></div>
+    <div class="btn-ring2"></div>
+    <div class="btn-ring3"></div>
+    <div class="btn-inner">
+      <span class="btn-play">▶</span>
+      <span class="btn-label">ЗАПУСК</span>
+    </div>
+  </button>
+  <p class="splash-sub" style="font-size:clamp(9px,2.5vw,14px);opacity:.45">нажми и записывай экран</p>
+</div>
+
+<!-- ══ АНИМАЦИЯ ══ -->
+<div id="wrap">
+  <div class="content">
+    <span class="neon fhero  cblue"  id="l01">2 миллиона людей.</span>
+    <span class="neon fbody  ccyan"  id="l02">Разные языки, страны, судьбы —</span>
+    <span class="neon fbody  ccyan"  id="l03">и все движутся в одну точку,</span>
+    <span class="neon fbody  ccyan"  id="l04">как данные в единую систему.</span>
+    <div class="div" id="d1"></div>
+    <span class="neon fitalic cgold" id="l05">Ни один алгоритм в мире не объяснит эту силу —</span>
+    <span class="neon fbody  cgold"  id="l06">только вера. ☝️</span>
+    <div class="div" id="d2"></div>
+    <span class="neon fbody  cpurp"  id="l07">Это живой код Всевышнего,</span>
+    <span class="neon fbody  cpurp"  id="l08">запущенный 1400 лет назад</span>
+    <span class="neon fbody  cpurp"  id="l09">и работающий без единого сбоя —</span>
+    <span class="neon fbody  cpink"  id="l10">пока системы мира считают прибыль,</span>
+    <span class="neon fbody  cpink"  id="l11">здесь считают шаги к Аллаху.</span>
+    <div class="div" id="d3"></div>
+    <span class="neon fbody  cgold"  id="l12">Мы часть этой системы —</span>
+    <span class="neon fbody  cgold"  id="l13">и это не случайность.</span>
+    <div class="div" id="d4"></div>
+    <span class="neon fgreet cwhite" id="l14">Курбан-байрам Мубарак, умма — 🕋🤲</span>
+    <span class="neon fgreet cgold"  id="l15">пусть Он примет от всех нас.</span>
+    <a class="neon flink   ccyan"  id="l16"
+       href="https://t.me/islam_dag_ai" target="_blank" rel="noopener">@islam_dag_ai</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ─── Particles ─── */
+  var C=document.getElementById('c'),ctx=C.getContext('2d');
+  function rsz(){C.width=innerWidth;C.height=innerHeight;}
+  rsz();addEventListener('resize',rsz);
+
+  var HUE=[198,160,280,42,330,130,220,260];
+  var amb=Array.from({length:88},function(_,i){
+    return{x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+      r:Math.random()*1.9+.15,vx:(Math.random()-.5)*.24,vy:-(Math.random()*.3+.04),
+      alpha:Math.random()*.4+.04,hue:HUE[i%HUE.length],phase:Math.random()*Math.PI*2};
+  });
+  var bst=[];
+  function burst(x,y,h,n){
+    for(var i=0;i<n;i++){
+      var a=Math.random()*Math.PI*2,s=Math.random()*12+2;
+      bst.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,
+        r:Math.random()*5+.5,alpha:1,hue:h,decay:Math.random()*.013+.009,grav:.19});
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,C.width,C.height);
+    var W=innerWidth,H=innerHeight;
+    amb.forEach(function(p){
+      p.phase+=.014;p.x+=p.vx+Math.sin(p.phase)*.24;p.y+=p.vy;
+      if(p.y<-10){p.y=H+10;p.x=Math.random()*W;}
+      if(p.x<-10||p.x>W+10){p.x=Math.random()*W;p.y=H+10;}
+      ctx.save();ctx.shadowBlur=14;ctx.shadowColor='hsl('+p.hue+',90%,68%)';
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='hsla('+p.hue+',90%,76%,'+p.alpha+')';ctx.fill();ctx.restore();
+    });
+    bst=bst.filter(function(p){return p.alpha>.01;});
+    bst.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.vy+=p.grav;p.vx*=.967;p.alpha-=p.decay;p.r*=.984;
+      ctx.save();ctx.shadowBlur=26;ctx.shadowColor='hsl('+p.hue+',98%,65%)';
+      ctx.beginPath();ctx.arc(p.x,p.y,Math.max(.1,p.r),0,Math.PI*2);
+      ctx.fillStyle='hsla('+p.hue+',98%,82%,'+p.alpha+')';ctx.fill();ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  /* ─── Font fit ─── */
+  function fit(){
+    document.querySelectorAll('.neon').forEach(function(el){
+      el.style.fontSize='';
+      requestAnimationFrame(function(){
+        var mw=innerWidth*.95;
+        if(el.scrollWidth>mw){
+          var fs=parseFloat(getComputedStyle(el).fontSize);
+          el.style.fontSize=(fs*(mw/el.scrollWidth))+'px';
+        }
+      });
+    });
+  }
+  addEventListener('resize',fit);
+
+  /* ─── Line animation ─── */
+  var DUR=780;
+  function animLine(id,enter,hue,loop,ldur,t){
+    setTimeout(function(){
+      var el=document.getElementById(id)||document.querySelector('#'+id);
+      el.style.animation=enter+' '+DUR+'ms cubic-bezier(.18,1,.28,1) forwards';
+      setTimeout(function(){
+        var r=el.getBoundingClientRect();
+        burst(r.left+r.width*.5,r.top+r.height*.5,hue,70);
+      },Math.round(DUR*.62));
+      setTimeout(function(){
+        el.style.opacity='1';el.style.transform='none';
+        el.style.filter='none';
+        el.style.animation=loop+' '+ldur+'ms ease-in-out infinite';
+      },DUR+65);
+    },t);
+  }
+  function animDiv(id,t){
+    setTimeout(function(){
+      var el=document.getElementById(id);
+      el.style.transition='opacity 650ms';el.style.opacity='1';
+      setTimeout(function(){el.style.animation='divPulse 3s ease-in-out infinite';},650);
+    },t);
+  }
+
+  /* ─── START button ─── */
+  var started=false;
+  document.getElementById('btnStart').addEventListener('click',function(){
+    if(started)return;started=true;
+
+    // Request fullscreen (best-effort)
+    var el=document.documentElement;
+    var rq=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen;
+    if(rq)try{rq.call(el);}catch(e){}
+
+    // Hide splash
+    var splash=document.getElementById('splash');
+    splash.classList.add('hide');
+    setTimeout(function(){splash.style.display='none';},850);
+
+    // Fit then sequence
+    if(document.fonts&&document.fonts.ready){
+      document.fonts.ready.then(start);
+    }else{
+      setTimeout(start,350);
+    }
+  });
+
+  function start(){
+    fit();
+    var G=790,S=430;
+    var t=180;
+    animLine('l01','fromLeft',  198,'bBlue', 9000,t); t+=G;
+    animLine('l02','fromRight', 160,'bCyan', 8000,t); t+=G;
+    animLine('l03','fromLeft',  160,'bCyan', 8200,t); t+=G;
+    animLine('l04','fromRight', 160,'bCyan', 7800,t); t+=S;
+    animDiv('d1',t);                                   t+=S;
+    animLine('l05','fromLeft',   42,'bGold', 8500,t); t+=G;
+    animLine('l06','fromRight',  42,'bGold', 7200,t); t+=S;
+    animDiv('d2',t);                                   t+=S;
+    animLine('l07','fromLeft',  280,'bPurp', 8200,t); t+=G;
+    animLine('l08','fromTop',   280,'bPurp', 8000,t); t+=G;
+    animLine('l09','fromRight', 280,'bPurp', 8400,t); t+=G;
+    animLine('l10','fromLeft',  330,'bPink', 7800,t); t+=G;
+    animLine('l11','fromRight', 330,'bPink', 8000,t); t+=S;
+    animDiv('d3',t);                                   t+=S;
+    animLine('l12','fromLeft',   42,'bGold', 7800,t); t+=G;
+    animLine('l13','fromRight',  42,'bGold', 7500,t); t+=S;
+    animDiv('d4',t);                                   t+=S;
+    animLine('l14','zoomIn',     60,'bWhite',8000,t); t+=G;
+    animLine('l15','fromBot',    42,'bGold', 7500,t); t+=G;
+    animLine('l16','zoomIn',    160,'bLink', 3800,t);
+  }
+})();
+</script>
+</body>
+</html>
