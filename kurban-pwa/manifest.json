@@ -4,7 +4,7 @@
   "description": "2 миллиона людей. Это живой код Всевышнего. @islam_dag_ai",
   "start_url": "/index.html",
   "scope": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#000000",
