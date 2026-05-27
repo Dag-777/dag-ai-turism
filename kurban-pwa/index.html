@@ -33,7 +33,7 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
 @keyframes scOut{0%{opacity:1}100%{opacity:0;transform:scale(.93) translateZ(0)}}
 @keyframes breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5)}}
 @keyframes flicker{0%,13%,15%,17%,26%,48%,93%,100%{filter:brightness(1)}14%,49%{filter:brightness(0.05)}16%{filter:brightness(0.38)}}
-@keyframes cdPop{0%{transform:scale(1.4);opacity:0}100%{transform:scale(1);opacity:1}}
+#ig-tag{display:none;position:fixed;bottom:8%;left:0;right:0;text-align:center;z-index:40;font-family:'Exo 2',sans-serif;font-weight:300;font-size:7vw;color:#d8fff8;text-decoration:none;letter-spacing:.05em;text-shadow:0 0 4px #fff,0 0 12px #00ffc8,0 0 28px #00bfa0,0 0 55px rgba(0,100,80,.7)}
 @keyframes neonBlink{0%,4%,6%,8%,18%,20%,45%,47%,94%,100%{filter:brightness(1.2)}5%,7%{filter:brightness(0.03)}19%{filter:brightness(0.08)}46%{filter:brightness(0.05)}}
 </style>
 </head>
@@ -41,7 +41,7 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
 <div class="bg"></div><div class="overlay"></div><div class="scan"></div>
 <canvas id="c"></canvas>
 <div id="hint"><div class="ring"></div><p>Tap anywhere</p></div>
-<div id="cdov" style="display:none;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;"><div id="cdnum" style="font-size:28vw;font-family:sans-serif;color:#fff;text-shadow:0 0 40px #fff,0 0 80px #0af;font-weight:100;line-height:1;"></div><div style="font-size:5vw;color:rgba(255,255,255,.5);margin-top:2vw;letter-spacing:.2em;">НАЧИНАЕМ</div></div>
+<a id="ig-tag" href="https://t.me/islam_dag_ai" target="_blank">@islam_dag_ai</a>
 <div class="content">
   <span class="neon" id="l1"></span>
   <span class="neon" id="l2"></span>
@@ -97,12 +97,12 @@ var SC=[
   [{t:'Ни один алгоритм',        a:'fromLeft', g:'blue',lp:'flicker',ld:9000,h:198},
    {t:'не объяснит эту силу —',  a:'fromTop',  g:'gold',lp:'breathe',ld:7500,h:42},
    {t:'только вера. ☝️',         a:'fromRight',g:'pink',lp:'breathe',ld:8000,h:330}],
-  [{t:'Живой код Всевышнего.',   a:'fromLeft', g:'purp',lp:'breathe',ld:9000,h:280},
-   {t:'1400 лет без сбоя.',      a:'fromTop',  g:'gold',lp:'breathe',ld:7500,h:42},
-   {t:'Мы — часть системы.',     a:'fromRight',g:'pink',lp:'breathe',ld:8500,h:330}],
-  [{t:'Курбан-байрам Мубарак!',      a:'fromLeft', g:'white',lp:'breathe',ld:9000,h:60},
-   {t:'пусть Он примет нас. 🕋🤲',   a:'fromTop',  g:'gold', lp:'breathe',ld:7500,h:42},
-   {t:'@islam_dag_ai',               a:'fromRight',g:'cyan', lp:'neonBlink',ld:2400,h:165,href:'https://t.me/islam_dag_ai'}]
+  [{t:'Живой код',              a:'fromLeft', g:'purp',lp:'breathe',ld:9000,h:280},
+   {t:'Всевышнего.',             a:'fromTop',  g:'gold',lp:'breathe',ld:7500,h:42, sz:'15vw'},
+   {t:'1400 лет без сбоя.',     a:'fromRight',g:'pink',lp:'breathe',ld:8500,h:330}],
+  [{t:'Курбан-байрам Мубарак!',      a:'fromLeft', g:'gold',lp:'breathe',ld:9000,h:42},
+   {t:'пусть Он примет нас. 🕋🤲',   a:'fromTop',  g:'gold',lp:'breathe',ld:7500,h:42},
+   {t:'умма Ислама! ☪️',             a:'fromRight',g:'pink',lp:'breathe',ld:8500,h:330}]
 ];
 var DUR=1100,GAP=1400,HOLD=2000,FADE=700;
 function cx(){return innerWidth/2;}function cy(){return innerHeight/2;}
@@ -123,6 +123,7 @@ function loadSc(sc){
     el.style.cssText='';el.id=['l1','l2','l3'][i];el.className='neon';
     el.textContent=sc[i].t;el.style.opacity='0';el.style.animation='none';
     el.style.transform='translateZ(0)';el.onclick=null;el.style.cursor='default';
+    if(sc[i].sz){el.style.fontSize=sc[i].sz;}
     if(sc[i].href){(function(h){el.style.cursor='pointer';el.onclick=function(){window.open(h,'_blank');};})(sc[i].href);}
   });
   void l1.offsetHeight;els.forEach(fitEl);
@@ -135,6 +136,7 @@ var idx=0;
 function runNext(){
   if(idx>=SC.length)return;
   var sc=SC[idx++],fin=(idx>=SC.length);
+  if(fin){var tg=document.getElementById('ig-tag');if(tg){tg.style.display='block';tg.style.animation='neonBlink 2400ms ease-in-out infinite';}}
   loadSc(sc);
   setTimeout(function(){
     animIn(l1,sc[0],0,0);animIn(l2,sc[1],1,GAP);animIn(l3,sc[2],2,GAP*2);
@@ -145,33 +147,12 @@ var started=false;
 var hint=document.getElementById('hint');
 function go(){
   if(started)return;started=true;
-  // fullscreen
   var docEl=document.documentElement,rq=docEl.requestFullscreen||docEl.webkitRequestFullscreen||docEl.mozRequestFullScreen||docEl.msRequestFullscreen;
   if(rq)try{rq.call(docEl);}catch(e){}
   hint.style.transition='opacity .4s';hint.style.opacity='0';
   setTimeout(function(){hint.style.display='none';},420);
-  // countdown overlay
-  var cdov=document.getElementById('cdov');
-  var cdnum=document.getElementById('cdnum');
-  cdov.style.display='flex';
-  var n=3;
-  cdnum.textContent=n;
-  cdnum.style.animation='none';void cdnum.offsetHeight;
-  var iv=setInterval(function(){
-    n--;
-    if(n>0){
-      cdnum.textContent=n;
-      cdnum.style.animation='none';void cdnum.offsetHeight;
-      cdnum.style.animation='cdPop .6s cubic-bezier(.22,1,.36,1)';
-    } else {
-      clearInterval(iv);
-      cdov.style.transition='opacity .35s';cdov.style.opacity='0';
-      setTimeout(function(){cdov.style.display='none';},350);
-      if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(runNext,60);});}
-      else{setTimeout(runNext,60);}
-    }
-  },1000);
-  cdnum.style.animation='cdPop .6s cubic-bezier(.22,1,.36,1)';
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(runNext,80);});}
+  else{setTimeout(runNext,400);}
 }
 document.addEventListener('click',go,{once:true});
 document.addEventListener('touchstart',go,{once:true,passive:true});
