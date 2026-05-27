@@ -33,7 +33,7 @@ canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
 @keyframes scOut{0%{opacity:1}100%{opacity:0;transform:scale(.93) translateZ(0)}}
 @keyframes breathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.5)}}
 @keyframes flicker{0%,13%,15%,17%,26%,48%,93%,100%{filter:brightness(1)}14%,49%{filter:brightness(0.05)}16%{filter:brightness(0.38)}}
-#ig-tag{display:none;position:fixed;top:62%;left:0;right:0;text-align:center;z-index:40;font-family:'Exo 2',sans-serif;font-weight:700;font-size:7vw;color:#d8fff8;text-decoration:none;letter-spacing:.05em;text-shadow:0 0 4px #fff,0 0 12px #00ffc8,0 0 28px #00bfa0,0 0 55px rgba(0,100,80,.7)}
+#ig-tag{display:none;position:fixed;top:72%;left:0;right:0;text-align:center;z-index:40;font-family:'Exo 2',sans-serif;font-weight:700;font-size:7vw;color:#d8fff8;text-decoration:none;letter-spacing:.05em;text-shadow:0 0 4px #fff,0 0 12px #00ffc8,0 0 28px #00bfa0,0 0 55px rgba(0,100,80,.7)}
 @keyframes neonBlink{0%,4%,6%,8%,18%,20%,45%,47%,94%,100%{filter:brightness(1.2)}5%,7%{filter:brightness(0.03)}19%{filter:brightness(0.08)}46%{filter:brightness(0.05)}}
 </style>
 </head>
@@ -85,9 +85,10 @@ function setGlow(el,g){
 }
 var l1=document.getElementById('l1'),l2=document.getElementById('l2'),l3=document.getElementById('l3');
 var els=[l1,l2,l3];
-function fitEl(el){
-  el.style.fontSize='';void el.offsetWidth;
-  var mw=innerWidth*.88;
+function fitEl(el,initSz){
+  if(initSz){el.style.fontSize=initSz;}else{el.style.fontSize='';}
+  void el.offsetWidth;
+  var mw=innerWidth*(initSz?.94:.88);
   if(el.scrollWidth>mw){var fs=parseFloat(window.getComputedStyle(el).fontSize);el.style.fontSize=Math.floor(fs*(mw/el.scrollWidth))+'px';}
 }
 var SC=[
@@ -126,7 +127,7 @@ function loadSc(sc){
     if(sc[i].sz){el.style.fontSize=sc[i].sz;}
     if(sc[i].href){(function(h){el.style.cursor='pointer';el.onclick=function(){window.open(h,'_blank');};})(sc[i].href);}
   });
-  void l1.offsetHeight;els.forEach(fitEl);
+  void l1.offsetHeight;els.forEach(function(el,i){fitEl(el,sc[i].sz);});
 }
 function fadeAll(cb){
   els.forEach(function(el){el.style.animation='scOut '+FADE+'ms ease forwards';});
