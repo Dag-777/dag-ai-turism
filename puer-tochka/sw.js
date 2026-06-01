@@ -1,5 +1,5 @@
 /* ПУЭР ТОЧКА — service worker (офлайн-кэш app shell) */
-var CACHE = 'puer-tochka-v2';
+var CACHE = 'puer-tochka-v3';
 var ASSETS = [
   './',
   './index.html',
