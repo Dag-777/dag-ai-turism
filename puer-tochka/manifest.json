@@ -1,0 +1,18 @@
+{
+  "name": "Пуэр Точка — Чайная",
+  "short_name": "Пуэр Точка",
+  "description": "Чайная для души и здоровья. Коллекционный пуэр, классика тегуаньинь и многое другое. Изысканный вкус от мастера.",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050507",
+  "theme_color": "#050507",
+  "categories": ["food", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

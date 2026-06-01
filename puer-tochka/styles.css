@@ -1,0 +1,272 @@
+/* ======================================================
+   ПУЭР ТОЧКА — неоновое слайд-шоу (PWA)
+   Неон собран на чистых text-shadow (без background-clip),
+   чтобы цвета корректно работали в Chrome, Samsung Internet,
+   Safari (iOS) и любом мобильном браузере.
+   ====================================================== */
+
+:root{
+  --cyan:#36f3ff;
+  --cyan-soft:#9ff6ff;
+  --gold:#ffd87a;
+  --gold-soft:#ffe9b0;
+  --bg:#050507;
+  --slide-time:6s;            /* длительность одного слайда */
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html,body{
+  height:100%;
+  background:var(--bg);
+  color:#fff;
+  font-family:'Manrope',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  overflow:hidden;
+  overscroll-behavior:none;
+}
+
+/* фикс высоты на мобильных (адресная строка) */
+.slider{ position:fixed; inset:0; height:100svh; width:100vw; overflow:hidden; background:#000; }
+
+/* ---------- звёздная неоновая пыль ---------- */
+#dust{
+  position:fixed; inset:0; width:100%; height:100%;
+  z-index:30; pointer-events:none;
+}
+
+/* ---------- слайд ---------- */
+.slide{
+  position:absolute; inset:0;
+  opacity:0; visibility:hidden;
+  transition:opacity .9s ease;
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.slide.is-active{ opacity:1; visibility:visible; z-index:2; }
+
+.slide__bg{
+  position:absolute; inset:0;
+  background-image:var(--img);
+  background-size:cover; background-position:center;
+  image-orientation:from-image;
+  transform:scale(1.04);
+}
+/* плавный «ken burns» только на активном слайде */
+.slide.is-active .slide__bg{
+  animation:kenburns var(--slide-time) ease-out forwards;
+}
+@keyframes kenburns{
+  from{ transform:scale(1.04); }
+  to{   transform:scale(1.16); }
+}
+
+/* затемнение для читаемости текста */
+.slide__shade{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(120% 90% at 50% 50%, rgba(0,0,0,.20) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.80) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.15) 35%, rgba(0,0,0,.35) 65%, rgba(0,0,0,.78) 100%);
+}
+
+/* ---------- контент (всегда по центру, не у края) ---------- */
+.slide__content{
+  position:relative; z-index:3;
+  width:min(92vw, 620px);
+  max-height:84svh;
+  margin:0 auto;
+  padding:0 16px;
+  text-align:center;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:clamp(10px, 2.6vh, 22px);
+  overflow:hidden;            /* текст никогда не выйдет за рамки */
+}
+
+/* ---------- типографика (всё через clamp — не вылезет) ---------- */
+.t-eyebrow{
+  font-family:'Manrope',sans-serif;
+  font-weight:600;
+  letter-spacing:.42em;
+  text-transform:uppercase;
+  font-size:clamp(.72rem, 3.6vw, 1.05rem);
+  padding-left:.42em;
+  opacity:0;
+}
+.t-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-weight:700;
+  letter-spacing:.06em;
+  line-height:1.02;
+  font-size:clamp(2.6rem, 13.5vw, 5.4rem);
+  overflow-wrap:break-word;
+  word-break:normal;
+  opacity:0;
+}
+.t-head{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-weight:700;
+  letter-spacing:.02em;
+  line-height:1.1;
+  /* кегль подобран так, чтобы самые длинные слова влезали даже на 320px */
+  font-size:clamp(1.85rem, 8vw, 3.5rem);
+  overflow-wrap:break-word;
+  word-break:normal;
+  opacity:0;
+}
+.t-sub{
+  font-family:'Manrope',sans-serif;
+  font-weight:400;
+  line-height:1.4;
+  font-size:clamp(1rem, 4.6vw, 1.45rem);
+  max-width:90%;
+  word-break:break-word;
+  opacity:0;
+}
+.emo{
+  -webkit-text-fill-color:initial;
+  text-shadow:none;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.35));
+}
+
+/* ---------- НЕОН (cyan) ---------- */
+.neon-cyan{
+  color:#eafdff;
+  text-shadow:
+    0 0 3px #ffffff,
+    0 0 8px var(--cyan-soft),
+    0 0 16px var(--cyan),
+    0 0 30px var(--cyan),
+    0 0 52px rgba(54,243,255,.65);
+}
+/* ---------- НЕОН (gold) ---------- */
+.neon-gold{
+  color:var(--gold-soft);
+  text-shadow:
+    0 0 3px #fff7e6,
+    0 0 8px var(--gold),
+    0 0 16px var(--gold),
+    0 0 30px rgba(255,184,77,.7);
+}
+
+/* мерцание / подмигивание — мягко, текст остаётся читаемым */
+.slide.is-active .neon-cyan{ animation:flyIn .9s cubic-bezier(.2,.7,.2,1) both, flickerC 5.5s ease-in-out 1s infinite; }
+.slide.is-active .neon-gold{ animation:flyIn .9s cubic-bezier(.2,.7,.2,1) .18s both, flickerG 6.2s ease-in-out 1.3s infinite; }
+.slide.is-active .t-eyebrow{ animation:flyIn .8s cubic-bezier(.2,.7,.2,1) both, flickerG 6.2s ease-in-out 1.3s infinite; }
+.slide.is-active .t-sub.neon-gold{ animation-delay:.3s, 1.5s; }
+
+@keyframes flyIn{
+  0%{   opacity:0; transform:translateY(38px) scale(.94); filter:blur(8px); }
+  60%{  opacity:1; }
+  100%{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+}
+/* «подмигивание» — короткие просадки яркости */
+@keyframes flickerC{
+  0%,100%{ opacity:1; }
+  47%,49%{ opacity:1; }
+  48%{ opacity:.62; }
+  72%,74%{ opacity:1; }
+  73%{ opacity:.74; }
+}
+@keyframes flickerG{
+  0%,100%{ opacity:1; }
+  38%{ opacity:.7; }
+  39%,41%{ opacity:1; }
+  40%{ opacity:.55; }
+  82%{ opacity:.8; }
+}
+
+/* ---------- прогресс ---------- */
+.progress{
+  position:absolute; top:0; left:0; right:0;
+  height:3px; z-index:25;
+  background:rgba(255,255,255,.12);
+}
+.progress__bar{
+  display:block; height:100%; width:0%;
+  background:linear-gradient(90deg,var(--cyan),var(--gold));
+  box-shadow:0 0 10px var(--cyan);
+}
+
+/* ---------- зоны нажатия ---------- */
+.tapzone{
+  position:absolute; top:0; bottom:0; width:38%;
+  z-index:20; background:transparent; border:0; cursor:pointer;
+}
+.tapzone--prev{ left:0; }
+.tapzone--next{ right:0; width:62%; }
+
+/* ---------- точки ---------- */
+.dots{
+  position:absolute; left:0; right:0;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 22px);
+  z-index:26;
+  display:flex; gap:9px; justify-content:center; align-items:center;
+}
+.dot{
+  width:8px; height:8px; border-radius:50%;
+  background:rgba(255,255,255,.32);
+  border:0; padding:0; cursor:pointer;
+  transition:all .35s ease;
+}
+.dot.is-on{
+  width:26px; border-radius:5px;
+  background:var(--cyan);
+  box-shadow:0 0 10px var(--cyan);
+}
+
+/* ---------- кнопка установки ---------- */
+.install-btn{
+  position:fixed; z-index:40;
+  top:calc(env(safe-area-inset-top,0px) + 14px); right:14px;
+  display:inline-flex; align-items:center; gap:7px;
+  padding:10px 16px; border:1px solid rgba(54,243,255,.55); border-radius:999px;
+  background:rgba(8,10,16,.55); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  color:#eafdff; font-family:'Manrope',sans-serif; font-weight:600; font-size:.9rem;
+  cursor:pointer;
+  text-shadow:0 0 8px var(--cyan);
+  box-shadow:0 0 14px rgba(54,243,255,.35);
+  animation:pulseBtn 2.4s ease-in-out infinite;
+}
+.install-btn__ico{ font-size:1.05rem; }
+@keyframes pulseBtn{
+  0%,100%{ box-shadow:0 0 12px rgba(54,243,255,.3); }
+  50%{ box-shadow:0 0 22px rgba(54,243,255,.7); }
+}
+
+/* ---------- iOS подсказка ---------- */
+.ios-hint{
+  position:fixed; inset:0; z-index:50;
+  display:flex; align-items:flex-end; justify-content:center;
+  background:rgba(0,0,0,.55); backdrop-filter:blur(4px);
+  padding:0 16px calc(env(safe-area-inset-bottom,0px) + 24px);
+}
+.ios-hint__card{
+  position:relative; width:min(92vw,420px);
+  background:rgba(12,14,20,.96); border:1px solid rgba(54,243,255,.4);
+  border-radius:20px; padding:22px 20px 24px;
+  box-shadow:0 0 30px rgba(54,243,255,.25);
+  animation:flyIn .5s ease both;
+}
+.ios-hint__title{ font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.5rem; margin-bottom:10px; }
+.ios-hint__text{ font-size:.98rem; line-height:1.5; color:#dfe9ee; }
+.ios-hint__share{ color:var(--cyan); }
+.ios-hint__close{
+  position:absolute; top:10px; right:12px;
+  width:32px; height:32px; border:0; border-radius:50%;
+  background:rgba(255,255,255,.08); color:#fff; font-size:1.4rem; line-height:1; cursor:pointer;
+}
+
+/* мелкие экраны — поджимаем */
+@media (max-height:560px){
+  .t-title{ font-size:clamp(2.2rem,11vw,3.6rem); }
+  .t-head{ font-size:clamp(1.7rem,8vw,2.8rem); }
+  .slide__content{ gap:8px; }
+}
+
+/* уважение к reduce-motion */
+@media (prefers-reduced-motion:reduce){
+  .slide.is-active .slide__bg{ animation:none; }
+  .slide.is-active .neon-cyan,
+  .slide.is-active .neon-gold,
+  .slide.is-active .t-eyebrow{ animation:flyIn .6s ease both; }
+  .install-btn{ animation:none; }
+}
