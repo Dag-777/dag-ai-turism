@@ -1,0 +1,17 @@
+# Service worker и точка входа — всегда свежие
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+/manifest.json
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Статика — кешируем надолго
+/img/*
+  Cache-Control: public, max-age=31536000, immutable
+/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+/styles.css
+  Cache-Control: public, max-age=86400
+/app.js
+  Cache-Control: public, max-age=86400
