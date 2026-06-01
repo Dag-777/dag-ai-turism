@@ -4,132 +4,113 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>Пуэр Точка — Чайная для души и здоровья</title>
-  <meta name="description" content="Пуэр Точка — чайная для души и здоровья. Коллекционный пуэр, классика тегуаньинь и многое другое. Изысканный вкус от мастера.">
+  <meta name="description" content="Пуэр Точка — чайная для души и здоровья. Коллекционный пуэр, классика тегуанинь и многое другое. Изысканный вкус от мастера.">
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#050507">
+  <meta name="theme-color" content="#000000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Пуэр Точка">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Пуэр Точка">
-  <meta name="mobile-web-app-capable" content="yes">
 
-  <!-- OG -->
   <meta property="og:title" content="Пуэр Точка — Чайная для души и здоровья">
-  <meta property="og:description" content="Коллекционный пуэр и классика тегуаньинь. Изысканный вкус от мастера. Вайб обеспечен 🚀">
+  <meta property="og:description" content="Коллекционный пуэр и классика тегуанинь. Изысканный вкус от мастера. Вайб обеспечен 🚀">
   <meta property="og:type" content="website">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap">
 
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- Звёздная неоновая пыль -->
+<div class="bg" aria-hidden="true"></div>
 <canvas id="dust" aria-hidden="true"></canvas>
 
-<!-- Слайдер -->
 <main id="slider" class="slider" aria-label="Слайд-шоу чайной Пуэр Точка">
 
-  <!-- 1 -->
-  <section class="slide is-active" data-slide style="--img:url('img/slide1.jpg')">
-    <div class="slide__bg"></div>
-    <div class="slide__shade"></div>
-    <div class="slide__content">
-      <h1 class="t-title neon-cyan" data-fly>ПУЭР ТОЧКА</h1>
-      <p class="t-sub neon-gold" data-fly>Чайная для души и здоровья <span class="emo">💪</span></p>
+  <!-- 1 — вывеска -->
+  <section class="slide is-active" data-slide data-hue="198" style="--img:url('img/slide1.jpg')">
+    <div class="slide__bg"></div><div class="slide__shade"></div>
+    <div class="content">
+      <h1 class="neon n-cyan fly-top fit" data-line>ПУЭР ТОЧКА</h1>
+      <p class="neon n-gold sub fly-up" data-line>Чайная для души и здоровья <span class="emo">💪</span></p>
     </div>
   </section>
 
   <!-- 2 — круглая витрина, разные чаи → Классика / Тегуанинь -->
-  <section class="slide" data-slide style="--img:url('img/slide2.jpg')">
-    <div class="slide__bg"></div>
-    <div class="slide__shade"></div>
-    <div class="slide__content">
-      <span class="t-eyebrow neon-gold" data-fly>Классика</span>
-      <h2 class="t-head neon-cyan" data-fly>Тегуанинь</h2>
+  <section class="slide" data-slide data-hue="42" style="--img:url('img/slide2.jpg')">
+    <div class="slide__bg"></div><div class="slide__shade"></div>
+    <div class="content">
+      <span class="neon n-cyan eyebrow fly-left" data-line>Классика</span>
+      <h2 class="neon n-gold fly-top fit" data-line>Тегуанинь</h2>
     </div>
   </section>
 
   <!-- 3 — блин пуэра в коробке, светильник → Пуэр коллекционный -->
-  <section class="slide" data-slide style="--img:url('img/slide3.jpg')">
-    <div class="slide__bg"></div>
-    <div class="slide__shade"></div>
-    <div class="slide__content">
-      <span class="t-eyebrow neon-gold" data-fly>Коллекция</span>
-      <h2 class="t-head neon-cyan" data-fly>Пуэр</h2>
-      <p class="t-sub neon-gold" data-fly>Коллекционный, выдержанный</p>
+  <section class="slide" data-slide data-hue="330" style="--img:url('img/slide3.jpg')">
+    <div class="slide__bg"></div><div class="slide__shade"></div>
+    <div class="content">
+      <span class="neon n-gold eyebrow fly-left" data-line>Коллекция</span>
+      <h2 class="neon n-rose fly-top fit" data-line>Пуэр</h2>
+      <p class="neon n-cyan sub fly-up" data-line>Коллекционный, выдержанный</p>
     </div>
   </section>
 
   <!-- 4 -->
-  <section class="slide" data-slide style="--img:url('img/slide4.jpg')">
-    <div class="slide__bg"></div>
-    <div class="slide__shade"></div>
-    <div class="slide__content">
-      <h2 class="t-head neon-cyan" data-fly>…и многое другое</h2>
-      <p class="t-sub neon-gold" data-fly>Целый мир вкуса ждёт вас</p>
+  <section class="slide" data-slide data-hue="198" style="--img:url('img/slide4.jpg')">
+    <div class="slide__bg"></div><div class="slide__shade"></div>
+    <div class="content">
+      <h2 class="neon n-cyan fly-top fit" data-line>…и многое другое</h2>
+      <p class="neon n-gold sub fly-up" data-line>Целый мир вкуса ждёт вас</p>
     </div>
   </section>
 
   <!-- 5 -->
-  <section class="slide" data-slide style="--img:url('img/slide5.jpg')">
-    <div class="slide__bg"></div>
-    <div class="slide__shade"></div>
-    <div class="slide__content">
-      <span class="t-eyebrow neon-gold" data-fly>Мастерство</span>
-      <h2 class="t-head neon-cyan" data-fly>Изысканный вкус от мастера</h2>
+  <section class="slide" data-slide data-hue="42" style="--img:url('img/slide5.jpg')">
+    <div class="slide__bg"></div><div class="slide__shade"></div>
+    <div class="content">
+      <span class="neon n-rose eyebrow fly-left" data-line>Мастерство</span>
+      <h2 class="neon n-gold fly-top fit" data-line>Изысканный вкус от мастера</h2>
     </div>
   </section>
 
   <!-- 6 -->
-  <section class="slide" data-slide style="--img:url('img/slide6.jpg')">
-    <div class="slide__bg"></div>
-    <div class="slide__shade"></div>
-    <div class="slide__content">
-      <h2 class="t-head neon-cyan" data-fly>Вайб обеспечен <span class="emo">🚀</span></h2>
+  <section class="slide" data-slide data-hue="330" style="--img:url('img/slide6.jpg')">
+    <div class="slide__bg"></div><div class="slide__shade"></div>
+    <div class="content">
+      <h2 class="neon n-rose fly-top fit" data-line>Вайб обеспечен <span class="emo">🚀</span></h2>
     </div>
   </section>
 
   <!-- 7 -->
-  <section class="slide" data-slide style="--img:url('img/slide7.jpg')">
-    <div class="slide__bg"></div>
-    <div class="slide__shade"></div>
-    <div class="slide__content">
-      <h1 class="t-title neon-cyan" data-fly>ПУЭР ТОЧКА</h1>
-      <p class="t-sub neon-gold" data-fly>Ждём вас в гости <span class="emo">🍵</span></p>
+  <section class="slide" data-slide data-hue="198" style="--img:url('img/slide7.jpg')">
+    <div class="slide__bg"></div><div class="slide__shade"></div>
+    <div class="content">
+      <h1 class="neon n-cyan fly-top fit" data-line>ПУЭР ТОЧКА</h1>
+      <p class="neon n-gold sub fly-up" data-line>Ждём вас в гости <span class="emo">🍵</span></p>
     </div>
   </section>
 
-  <!-- Прогресс -->
   <div class="progress" aria-hidden="true"><span class="progress__bar" id="progressBar"></span></div>
-
-  <!-- Невидимые зоны нажатия -->
   <button class="tapzone tapzone--prev" type="button" aria-label="Предыдущий слайд"></button>
   <button class="tapzone tapzone--next" type="button" aria-label="Следующий слайд"></button>
-
-  <!-- Точки -->
   <nav class="dots" id="dots" aria-label="Навигация по слайдам"></nav>
 </main>
 
-<!-- Кнопка установки -->
 <button id="installBtn" class="install-btn" type="button" hidden>
   <span class="install-btn__ico">⤓</span> Установить
 </button>
 
-<!-- Подсказка для iOS -->
 <div id="iosHint" class="ios-hint" hidden>
   <div class="ios-hint__card">
     <button class="ios-hint__close" id="iosClose" type="button" aria-label="Закрыть">×</button>
-    <div class="ios-hint__title neon-cyan">Установка на iPhone</div>
-    <p class="ios-hint__text">
-      Нажмите <b>«Поделиться»</b> <span class="ios-hint__share">􀈂</span> внизу Safari,
-      затем выберите <b>«На экран Домой»</b>.
-    </p>
+    <div class="ios-hint__title neon n-cyan">Установка на iPhone</div>
+    <p class="ios-hint__text">Нажмите <b>«Поделиться»</b> внизу Safari, затем <b>«На экран Домой»</b>.</p>
   </div>
 </div>
 
